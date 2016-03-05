@@ -50,25 +50,25 @@ function detachUSB() {
   var vms = $("select[name=vms] option:selected").val();
   var usbs = $("select[name=usbs] option:selected").val();
   if (vms && usbs) {
-    $("input[name=fan]").val('Please wait...');
-    $("#fan").val('Detecting ...');
+    $("input[name=Status]").val('Detaching Please wait...');
+    $("#detach").val('Detaching ...');
     $.get('/plugins/<?=$plugin;?>/include/SystemFan.php',{op:'detect', pwm:pwm},function(data) {
-      $("input[name=fan]").val(data);
-      $("#fan").val('Detect');
+      $("input[name=Status]").val(data);
+      $("#detach").val('Detach');
     });
   }
 }
 
 
 function attachUSB() {
-  var pwm = $("select[name=controller] option:selected").val();
-  var fan = $("input[name=fan]").val();
-  if (pwm && fan) {
-    $("input[name=pwm]").val('Please wait...');
-    $("#pwm").val('Detecting ...');
+  var vms = $("select[name=vms] option:selected").val();
+  var usbs = $("select[name=usbs] option:selected").val();
+  if (vms && usbs) {    
+   	$("input[name=Status]").val('Attaching Please wait...');
+    $("#attach").val('Attaching ...');
     $.get('/plugins/<?=$plugin;?>/include/SystemFan.php',{op:'pwm',pwm:pwm,fan:fan},function(data) {
       $("input[name=pwm]").val(data);
-      $("#pwm").val('Detect');
+      $("#attach").val('Attach');
     });
   }
 }
@@ -97,7 +97,7 @@ USB Devices:
 <input type="button" value="Detach" onclick="detachUSB();" id="detach" style="margin-top:0">
 <input type="button" value="Attach" onclick="attachUSB();" id="attach" style="margin-top:0">
 
- <br>
+
 Status:
 : <input type="text" name="Status">
  <br>
