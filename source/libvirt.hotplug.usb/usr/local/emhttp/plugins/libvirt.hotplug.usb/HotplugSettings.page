@@ -1,0 +1,75 @@
+Menu="VMs:2"
+Title="USB Hotplug"
+Icon="hotplug.usb.png"
+Markdown="false"
+---
+<?PHP
+/* Copyright 2016, Burhan Shakil 
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ */
+ 
+require_once('/usr/local/emhttp/webGui/include/Helpers.php');
+require_once('/usr/local/emhttp/plugins/dynamix.vm.manager/classes/libvirt.php');
+require_once('/usr/local/emhttp/plugins/dynamix.vm.manager/classes/libvirt_helpers.php');
+	
+$arrValidUSBDevices = getValidUSBDevices();
+
+$plugin = "hotplug.usb";
+$cfg    = parse_plugin_cfg($plugin);
+$sName  = "hotplug";
+$fName  = "/usr/local/emhttp/plugins/$plugin/scripts/$sName";
+
+function list_vms() {
+  $out = array();
+  exec("/usr/sbin/virsh list | awk '{if (NR!=1) {print $2}}'",$vmlist);
+  foreach ($vmlist as $vm) {
+      $out[] = array('name'=>$vm);
+    }
+  return $out;
+}
+
+function list_usbs() {
+  global $arrValidUSBDevices;
+  $out = array();
+  if (!empty($arrValidUSBDevices)) {
+   foreach($arrValidUSBDevices as $i => $arrDev) {
+   $out[] = array('name'=>$arrDev['name']);
+   } }
+    else {
+    $out[] = array('name'=>"None available");
+    }
+  return $out;
+}
+
+?>
+
+<form markdown="1" method="POST" action="/update.php" target="progressFrame">
+<input type="hidden" name="#file" value="<?=$plugin?>/<?=$plugin?>.cfg">
+<input type="hidden" name="#include" value="plugins/<?=$plugin?>/include/update.autofan.php">
+<input type="hidden" name="#prefix" value="controller=c&fan=f&pwm=l&low=t&high=T&interval=m">
+<span class="bitstream" style="float:right;margin-right:12px"><?=exec("$fName -V")?></span>
+
+
+Running VMs:
+<select name="vms" size="1">
+  <?foreach (list_vms() as $vms):?>
+  <?=mk_option($vms['name'],$vms['name'],$vms['name'])?>
+  <?endforeach;?>
+</select>
+
+USB Devices:
+<select name="usbs" size="1">
+  <?foreach (list_usbs() as $usb):?>
+  <?=mk_option($usb['name'],$usb['name'],$usb['name'])?>
+  <?endforeach;?>
+</select>
+
+
+<input type="submit" name="#attach" value="Attach"><input type="submit" name="#detach" value="Detach">
+</form>
