@@ -15,7 +15,6 @@ Markdown="false"
  */
  
 require_once('/usr/local/emhttp/webGui/include/Helpers.php');
-require_once('/usr/local/emhttp/plugins/dynamix.vm.manager/classes/libvirt.php');
 require_once('/usr/local/emhttp/plugins/dynamix.vm.manager/classes/libvirt_helpers.php');
 	
 $arrValidUSBDevices = getValidUSBDevices();
@@ -43,6 +42,9 @@ function list_usbs() {
 }
 ?>
 
+<script>
+</script>
+
 Running VMs:
 <select name="vms" size="1">
   <?foreach (list_vms() as $vms):?>
@@ -56,4 +58,8 @@ USB Devices:
   <?=mk_option($usb['name'],$usb['name'],$usb['name'])?>
   <?endforeach;?>
 </select>
-</form>
+
+
+<input type="button" value="Detach" onclick="detachUSB();" id="detach" style="margin-top:0">
+<input type="button" value="Attach" onclick="attachUSB();" id="attach" style="margin-top:0">
+
