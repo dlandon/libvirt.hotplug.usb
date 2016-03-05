@@ -52,6 +52,8 @@ function detachUSB() {
   if (vms && usbs) {
     $("input[name=Status]").val('Detaching Please wait...');
     $("#detach").val('Detaching ...');
+    $("#detach").attr("disabled", true);
+    $("#attach").attr("disabled", true);
     $.get('/plugins/<?=$plugin;?>/include/SystemFan.php',{op:'detect', pwm:pwm},function(data) {
       $("input[name=Status]").val(data);
       $("#detach").val('Detach');
@@ -66,6 +68,8 @@ function attachUSB() {
   if (vms && usbs) {    
    	$("input[name=Status]").val('Attaching Please wait...');
     $("#attach").val('Attaching ...');
+    $("#attach").attr("disabled", true);
+    $("#detach").attr("disabled", true);
     $.get('/plugins/<?=$plugin;?>/include/SystemFan.php',{op:'pwm',pwm:pwm,fan:fan},function(data) {
       $("input[name=pwm]").val(data);
       $("#attach").val('Attach');
@@ -99,7 +103,7 @@ USB Devices:
 
 
 Status:
-: <input type="text" name="Status">
+<input type="text" name="Status">
  <br>
 Note: Some USB Devices require detaching and attaching multiple times to be properly detected by VMs.
 
