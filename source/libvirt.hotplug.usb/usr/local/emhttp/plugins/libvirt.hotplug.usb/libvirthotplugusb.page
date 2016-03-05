@@ -41,12 +41,7 @@ function list_usbs() {
     }
   return $out;
 }
-
 ?>
-
-<form markdown="1" method="POST" action="/update.php" target="progressFrame">
-<span class="bitstream" style="float:right;margin-right:12px"><?=exec("$fName -V")?></span>
-
 
 Running VMs:
 <select name="vms" size="1">
@@ -61,7 +56,4 @@ USB Devices:
   <?=mk_option($usb['name'],$usb['name'],$usb['name'])?>
   <?endforeach;?>
 </select>
-
-
-<input type="submit" name="#attach" value="Attach"><input type="submit" name="#detach" value="Detach">
 </form>

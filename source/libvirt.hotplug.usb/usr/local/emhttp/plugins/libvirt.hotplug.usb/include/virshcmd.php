@@ -4,7 +4,6 @@
  */
 ?>
 <?
-require_once "webGui/include/Wrappers.php";
 
 if ($_POST['mode']>0) {
   $hour = isset($_POST['hour']) ? $_POST['hour'] : '*';
