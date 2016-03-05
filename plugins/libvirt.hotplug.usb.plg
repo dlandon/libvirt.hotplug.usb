@@ -4,7 +4,7 @@
 <!ENTITY name      "libvirt.hotplug.usb">
 <!ENTITY author    "Burhan/bshakil">
 <!ENTITY version   "2015.03.28">
-<!ENTITY launch    "VMs/HotplugSettings">
+<!ENTITY launch    "VMs/libvirthotplugusb">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/bshakil/unraid-libvirt-usbhotplug/master/plugins/libvirt.hotplug.usb.plg">
 <!ENTITY source    "/boot/config/plugins/&name;/&name;">
 <!ENTITY MD5       "b765f1a20a755b6d25c450f690123681">
@@ -49,6 +49,10 @@ fi
 <MD5>&MD5;</MD5>
 </FILE>
 
+
+<!-- POST-INSTALL SCRIPT -->
+<FILE Run="/bin/bash">
+<INLINE>
 echo ""
 echo "-----------------------------------------------------------"
 echo " Plugin &name; is installed."
