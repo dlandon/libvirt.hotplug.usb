@@ -1,13 +1,13 @@
 Menu="VMs:2"
-Title="USB Hotplug"
-Icon="hotplug.usb.png"
+Title="Libvirt Hotplug USB"
+Icon="libvirt.hotplug.usb.png"
 Markdown="false"
 ---
 <?PHP
 /* Copyright 2016, Burhan Shakil 
  *
  * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License version 2,
+ * modify it under the terms of the GNU General Public License version 3,
  * as published by the Free Software Foundation.
  *
  * The above copyright notice and this permission notice shall be included in
@@ -19,11 +19,6 @@ require_once('/usr/local/emhttp/plugins/dynamix.vm.manager/classes/libvirt.php')
 require_once('/usr/local/emhttp/plugins/dynamix.vm.manager/classes/libvirt_helpers.php');
 	
 $arrValidUSBDevices = getValidUSBDevices();
-
-$plugin = "hotplug.usb";
-$cfg    = parse_plugin_cfg($plugin);
-$sName  = "hotplug";
-$fName  = "/usr/local/emhttp/plugins/$plugin/scripts/$sName";
 
 function list_vms() {
   $out = array();
@@ -50,9 +45,6 @@ function list_usbs() {
 ?>
 
 <form markdown="1" method="POST" action="/update.php" target="progressFrame">
-<input type="hidden" name="#file" value="<?=$plugin?>/<?=$plugin?>.cfg">
-<input type="hidden" name="#include" value="plugins/<?=$plugin?>/include/update.autofan.php">
-<input type="hidden" name="#prefix" value="controller=c&fan=f&pwm=l&low=t&high=T&interval=m">
 <span class="bitstream" style="float:right;margin-right:12px"><?=exec("$fName -V")?></span>
 
 
