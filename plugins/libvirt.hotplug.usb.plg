@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "libvirt.hotplug.usb">
 <!ENTITY author    "Burhan/bshakil">
-<!ENTITY version   "2015.04.5">
+<!ENTITY version   "2015.04.6">
 <!ENTITY launch    "VMs/libvirthotplugusb">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/bshakil/unraid-libvirt-usbhotplug/master/plugins/libvirt.hotplug.usb.plg">
 <!ENTITY source    "/boot/config/plugins/&name;/&name;">
-<!ENTITY MD5       "4a87807145c7e847ba3df2ab5aaea388">
+<!ENTITY MD5       "8a6403b3f0edc0d6c59b1fceb1d4d6e2">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">

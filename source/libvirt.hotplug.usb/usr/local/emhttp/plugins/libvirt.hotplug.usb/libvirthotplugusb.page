@@ -53,14 +53,7 @@ var URL = '/plugins/<?=$plugin;?>/include/VirshCmd.php';
 function detachUSB(el, action) {
   var vms = $("select[name=vms] option:selected").val();
   var usbs = $("select[name=usbs] option:selected").val();
-  if (vms && usbs) {
-    $("input[name=Status]").val('Detaching Please wait...');
-    $("#detach").attr("disabled", true);
-    $("#attach").attr("disabled", true);
-    
-    $("input[name=Status]").val(data);
-    $("#detach").val('Detach');
-    
+  if (vms && usbs) {   
     var old = $(el).html();
 	$(el).html("<i class='fa fa-circle-o-notch fa-spin'></i> Detaching ...");
   }
