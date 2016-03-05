@@ -5,14 +5,32 @@
 ?>
 <?
 
-if ($_POST['mode']>0) {
-  $hour = isset($_POST['hour']) ? $_POST['hour'] : '*';
-  $min  = isset($_POST['min'])  ? $_POST['min']  : '*';
-  $dotm = isset($_POST['dotm']) ? $_POST['dotm'] : '*';
-  $day  = isset($_POST['day'])  ? $_POST['day']  : '*';
-  $cron = "# Generated ssd trim schedule:\n$min $hour $dotm * $day /sbin/fstrim -v /mnt/cache | logger &> /dev/null\n\n";
-} else {
-  $cron = "";
-}
-parse_cron_cfg('dynamix', 'ssd-trim', $cron);
+switch ($_POST['action']) {
+
+
+		case 'detach':
+		$ip = urldecode($_POST['IP']);
+		$user = isset($_POST['USER']) ? urlencode($_POST['USER']) : NULL;
+		$pass = isset($_POST['PASS']) ? urlencode($_POST['PASS']) : NULL;
+		$login = $user ? ($pass ? "-U '{$user}%{$pass}'" : "-U '{$user}' -N") : "-U%";
+		echo shell_exec("/usr/bin/smbclient -g -L '$ip' $login 2>&1|awk -F'|' '/Disk/{print $2}'|sort");
+		break;
+		
+		case 'attach':
+		$ip = urldecode($_POST['IP']);
+		$user = isset($_POST['USER']) ? urlencode($_POST['USER']) : NULL;
+		$pass = isset($_POST['PASS']) ? urlencode($_POST['PASS']) : NULL;
+		$login = $user ? ($pass ? "-U '{$user}%{$pass}'" : "-U '{$user}' -N") : "-U%";
+		echo shell_exec("/usr/bin/smbclient -g -L '$ip' $login 2>&1|awk -F'|' '/Disk/{print $2}'|sort");
+		break;
+		
+		
+		
+		
+		
+		}
+		
+		
+		
+
 ?>

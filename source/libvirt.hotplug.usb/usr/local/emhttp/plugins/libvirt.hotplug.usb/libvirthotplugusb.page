@@ -32,11 +32,15 @@ function list_vms() {
 function list_usbs() {
   global $arrValidUSBDevices;
   $out = array();
-  if (!empty($arrValidUSBDevices)) {
-   foreach($arrValidUSBDevices as $i => $arrDev) {
+  if (!empty($arrValidUSBDevices)) 
+  {
+   foreach($arrValidUSBDevices as $i => $arrDev) 
+   {
    $out[] = array('name'=>$arrDev['name']);
-   } }
-    else {
+   } 
+}
+    else 
+    {
     $out[] = array('name'=>"None available");
     }
   return $out;
@@ -44,25 +48,26 @@ function list_usbs() {
 ?>
 
 <script>
+var URL = '/plugins/<?=$plugin;?>/include/VirshCmd.php';
 
-
-function detachUSB() {
+function detachUSB(el, action) {
   var vms = $("select[name=vms] option:selected").val();
   var usbs = $("select[name=usbs] option:selected").val();
   if (vms && usbs) {
     $("input[name=Status]").val('Detaching Please wait...');
-    $("#detach").val('Detaching ...');
     $("#detach").attr("disabled", true);
     $("#attach").attr("disabled", true);
-    $.get('/plugins/<?=$plugin;?>/include/SystemFan.php',{op:'detect', pwm:pwm},function(data) {
-      $("input[name=Status]").val(data);
-      $("#detach").val('Detach');
-    });
+    
+    $("input[name=Status]").val(data);
+    $("#detach").val('Detach');
+    
+    var old = $(el).html();
+	$(el).html("<i class='fa fa-circle-o-notch fa-spin'></i> Detaching ...");
   }
 }
 
 
-function attachUSB() {
+function attachUSB(el, action) {
   var vms = $("select[name=vms] option:selected").val();
   var usbs = $("select[name=usbs] option:selected").val();
   if (vms && usbs) {    
@@ -79,7 +84,6 @@ function attachUSB() {
 $(function() {
   showStatus('<?=$sName?>');
 });
-
 
 </script>
 
@@ -98,8 +102,8 @@ USB Devices:
 </select>
 
 
-<input type="button" value="Detach" onclick="detachUSB();" id="detach" style="margin-top:0">
-<input type="button" value="Attach" onclick="attachUSB();" id="attach" style="margin-top:0">
+<input type="button" value="Detach" onclick="detachUSB(this,'attach');" id="detach" style="margin-top:0">
+<input type="button" value="Attach" onclick="attachUSB(this,'detach');" id="attach" style="margin-top:0">
 
 
 Status:
