@@ -50,33 +50,29 @@ function list_usbs()
 ?>
 
 <script>
-var URL = '/plugins/<?=$plugin;?>/include/VirshCmd.php';
+var URL = '/plugins/libvirt.hotplug.usb/include/VirshCmd.php';
 
-function operateUSB() 
+function operateUSB(action) 
 {
   var vms = $("select[name=vms] option:selected").val();
   var usbs = $("select[name=usbs] option:selected").val();
-  if (vms && usbs) 
-  {   
-  	 $("#detach").val('Detaching');
+  if (vms && usbs) {   
     $("input[name=Status]").val('Detaching Please wait...');
     $("#detach").attr("disabled", true);
     $("#attach").attr("disabled", true);
     var opts = new Object();
-	opts["action"] = 'detach';
+	opts["action"] = action;
 	opts["VMNAME"] = vms;
 	opts["USBID"] = usbs;
 	$.post(URL,opts).done(function(data){
 	if (data) {
 	$("input[name=Status]").val(data);
-	}
 	
 	}
+	});
     
 	}
 }
-
-
 </script>
 
 Running VMs:
