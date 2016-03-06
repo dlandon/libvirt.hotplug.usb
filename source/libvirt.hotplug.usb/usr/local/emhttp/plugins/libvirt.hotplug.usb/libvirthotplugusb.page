@@ -64,15 +64,10 @@ function detachUSB(el, action)
     
     var opts = new Object();
 	opts["action"] = action;
-	opts["IP"] = getVal("#dialog-confirm","IP");
-	opts["USER"] = getVal("#dialog-confirm","USER");
-	opts["PASS"] = getVal("#dialog-confirm","PASS");
-    
-    
-    
-    
-    
-    $("input[name=Status]").val(data);
+	opts["ID"] = $('#usbs option:selected').attr('id');
+	
+	
+    $("input[name=Status]").val(opts["ID"]);
     $("#detach").val('Detach');
   }
 }
@@ -105,7 +100,7 @@ Running VMs:
 USB Devices:
 <select name="usbs" size="1">
   <?foreach (list_usbs() as $usb):?>
-  <?=mk_option("","",$usb['id'])?>
+  <?=mk_option("","$usb['id']",$usb['name'])?>
   <?endforeach;?>
 </select>
 
