@@ -3,8 +3,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "libvirt.hotplug.usb">
 <!ENTITY author    "Burhan/bshakil">
-<!ENTITY version   "2016.03.06">
-<!ENTITY launch    "VMs/libvirthotplugusb">
+<!ENTITY version   "2016.03.07">
+<!ENTITY launch    "VMs">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/bshakil/unraid-libvirt-usbhotplug/master/plugins/libvirt.hotplug.usb.plg">
 <!ENTITY source    "/boot/config/plugins/&name;/&name;">
 <!ENTITY MD5       "53e0409478be0f370eaa1dbd74dbd10f">
@@ -16,6 +16,11 @@
 ##&name;
 
 ###&version;
+
+- launch and icon fix
+
+###2016.03.06
+
 - initial release for unRAID v6
 
 </CHANGES>
