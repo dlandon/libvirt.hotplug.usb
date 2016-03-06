@@ -14,7 +14,7 @@ $usbstr = '';
 if (!empty($usbid)) 
 {
 $usbx = explode(':', $usbid);
-$usbstr .= "<hostdev mode='subsystem' type='usb' managed='yes'>
+$usbstr .= "<hostdev mode='subsystem' type='usb'>
 <source>
 <vendor id='0x".$usbx[0]."'/>
 <product id='0x".$usbx[1]."'/>
@@ -32,7 +32,7 @@ $usbstr = '';
 if (!empty($usbid)) 
 {
 $usbx = explode(':', $usbid);
-$usbstr .= "<hostdev mode='subsystem' type='usb' managed='yes'>
+$usbstr .= "<hostdev mode='subsystem' type='usb'>
 <source>
 <vendor id='0x".$usbx[0]."'/>
 <product id='0x".$usbx[1]."'/>
