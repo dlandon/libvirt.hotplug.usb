@@ -7,7 +7,7 @@
 <!ENTITY launch    "VMs/libvirthotplugusb">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/bshakil/unraid-libvirt-usbhotplug/master/plugins/libvirt.hotplug.usb.plg">
 <!ENTITY source    "/boot/config/plugins/&name;/&name;">
-<!ENTITY MD5       "3632dcf0bfd2693f1bf2bd0e645c500e">
+<!ENTITY MD5       "45ae56d12b6d068b65c1d15f7eebb5f1">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
