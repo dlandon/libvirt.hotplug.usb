@@ -52,46 +52,37 @@ function list_usbs()
 <script>
 var URL = '/plugins/<?=$plugin;?>/include/VirshCmd.php';
 
-function detachUSB() 
+function operateUSB() 
 {
   var vms = $("select[name=vms] option:selected").val();
   var usbs = $("select[name=usbs] option:selected").val();
-  $("input[name=Status]").val("Step1");
   if (vms && usbs) 
   {   
+  	 $("#detach").val('Detaching');
     $("input[name=Status]").val('Detaching Please wait...');
     $("#detach").attr("disabled", true);
     $("#attach").attr("disabled", true);
+    var opts = new Object();
+	opts["action"] = 'detach';
+	opts["VMNAME"] = vms;
+	opts["USBID"] = usbs;
+	$.post(URL,opts).done(function(data){
+	if (data) {
+	$("input[name=Status]").val(data);
+	}
+	
+	}
     
-	
-	
-    $("input[name=Status]").val(usbs);
-    $("#detach").val('Detach');
-  }
+	}
 }
 
-
-function attachUSB(el, action) {
-  var vms = $("select[name=vms] option:selected").val();
-  var usbs = $("select[name=usbs] option:selected").val();
-  if (vms && usbs) {    
-   	$("input[name=Status]").val('Attaching Please wait...');
-    $("#attach").val('Attaching ...');
-    $("#attach").attr("disabled", true);
-    $("#detach").attr("disabled", true);
-    $.get('/plugins/<?=$plugin;?>/include/SystemFan.php',{op:'pwm',pwm:pwm,fan:fan},function(data) {
-      $("input[name=pwm]").val(data);
-      $("#attach").val('Attach');
-    });
-  }
-}
 
 </script>
 
 Running VMs:
 <select name="vms" size="1">
   <?foreach (list_vms() as $vms):?>
-  <?=mk_option("","",$vms['name'])?>
+  <?=mk_option("",$vms['name'],$vms['name'])?>
   <?endforeach;?>
 </select>
 
@@ -103,8 +94,8 @@ USB Devices:
 </select>
 
 
-<input type="button" value="Detach" onclick="detachUSB();" id="detach" style="margin-top:0">
-<input type="button" value="Attach" onclick="attachUSB();" id="attach" style="margin-top:0">
+<input type="button" value="Detach" onclick="operateUSB('detach');" id="detach" style="margin-top:0">
+<input type="button" value="Attach" onclick="operateUSB('attach');" id="attach" style="margin-top:0">
 
 
 Status:
