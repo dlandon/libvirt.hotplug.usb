@@ -57,7 +57,7 @@ function operateUSB(action)
   var vms = $("select[name=vms] option:selected").val();
   var usbs = $("select[name=usbs] option:selected").val();
   if (vms && usbs) {   
-    $("input[name=Status]").val('Detaching Please wait...');
+    $("textarea[name=Status]").val('Detaching Please wait...');
     $("#detach").attr("disabled", true);
     $("#attach").attr("disabled", true);
     var opts = new Object();
@@ -66,8 +66,9 @@ function operateUSB(action)
 	opts["USBID"] = usbs;
 	$.post(URL,opts).done(function(data){
 	if (data) {
-	$("input[name=Status]").val(data);
-	
+	$("textarea[name=Status]").val(data);
+	$("#detach").attr("disabled", false);
+    $("#attach").attr("disabled", false);
 	}
 	});
     
@@ -93,9 +94,10 @@ USB Devices:
 <input type="button" value="Detach" onclick="operateUSB('detach');" id="detach" style="margin-top:0">
 <input type="button" value="Attach" onclick="operateUSB('attach');" id="attach" style="margin-top:0">
 
-
+<br>
 Status:
-<input type="text" name="Status">
+<br>
+<textarea name="Status"></textarea>
  <br>
 <br>
 
