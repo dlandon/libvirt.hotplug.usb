@@ -102,8 +102,8 @@ USB Devices:
 </select>
 
 
-<input type="button" value="Detach" onclick="detachUSB(this,'attach');" id="detach" style="margin-top:0">
-<input type="button" value="Attach" onclick="attachUSB(this,'detach');" id="attach" style="margin-top:0">
+<input type="button" value="Detach" onclick="detachUSB();" id="detach" style="margin-top:0">
+<input type="button" value="Attach" onclick="attachUSB();" id="attach" style="margin-top:0">
 
 
 Status:
