@@ -22,27 +22,29 @@ $arrValidUSBDevices = getValidUSBDevices();
 
 function list_vms() {
   $out = array();
-  exec("/usr/sbin/virsh list | awk '{if (NR!=1) {print $2}}'",$vmlist);
-  foreach ($vmlist as $vm) {
+  exec("/usr/sbin/virsh list | awk '{if (NR!=1&&NR!=2) {print $2}} | head -n-1'",$vmlist);
+  foreach ($vmlist as $vm) 
+  	{
       $out[] = array('name'=>$vm);
-    }
+	}
   return $out;
 }
 
-function list_usbs() {
+function list_usbs() 
+{
   global $arrValidUSBDevices;
   $out = array();
-  if (!empty($arrValidUSBDevices)) 
-  {
-   foreach($arrValidUSBDevices as $i => $arrDev) 
-   {
-   $out[] = array('name'=>$arrDev['name']);
-   } 
-}
-    else 
-    {
-    $out[] = array('name'=>"None available");
-    }
+  	if (!empty($arrValidUSBDevices)) 
+  	{
+  		foreach($arrValidUSBDevices as $i => $arrDev) 
+   		{
+   			$out[] = array('name'=>$arrDev['name'],'id'=>$arrDev['id']);
+   		} 
+  	}
+	else 
+	{
+		$out[] = array('name'=>"None available");
+	}
   return $out;
 }
 ?>
@@ -50,12 +52,28 @@ function list_usbs() {
 <script>
 var URL = '/plugins/<?=$plugin;?>/include/VirshCmd.php';
 
-function detachUSB(el, action) {
+function detachUSB(el, action) 
+{
   var vms = $("select[name=vms] option:selected").val();
   var usbs = $("select[name=usbs] option:selected").val();
-  if (vms && usbs) {   
-    var old = $(el).html();
-	$(el).html("<i class='fa fa-circle-o-notch fa-spin'></i> Detaching ...");
+  if (vms && usbs) 
+  {   
+    $("input[name=Status]").val('Detaching Please wait...');
+    $("#detach").attr("disabled", true);
+    $("#attach").attr("disabled", true);
+    
+    var opts = new Object();
+	opts["action"] = action;
+	opts["IP"] = getVal("#dialog-confirm","IP");
+	opts["USER"] = getVal("#dialog-confirm","USER");
+	opts["PASS"] = getVal("#dialog-confirm","PASS");
+    
+    
+    
+    
+    
+    $("input[name=Status]").val(data);
+    $("#detach").val('Detach');
   }
 }
 
@@ -74,23 +92,20 @@ function attachUSB(el, action) {
     });
   }
 }
-$(function() {
-  showStatus('<?=$sName?>');
-});
 
 </script>
 
 Running VMs:
 <select name="vms" size="1">
   <?foreach (list_vms() as $vms):?>
-  <?=mk_option($vms['name'],$vms['name'],$vms['name'])?>
+  <?=mk_option("","",$vms['name'])?>
   <?endforeach;?>
 </select>
 
 USB Devices:
 <select name="usbs" size="1">
   <?foreach (list_usbs() as $usb):?>
-  <?=mk_option($usb['name'],$usb['name'],$usb['name'])?>
+  <?=mk_option("","",$usb['id'])?>
   <?endforeach;?>
 </select>
 
@@ -102,5 +117,7 @@ USB Devices:
 Status:
 <input type="text" name="Status">
  <br>
+<br>
+
 Note: Some USB Devices require detaching and attaching multiple times to be properly detected by VMs.
 
