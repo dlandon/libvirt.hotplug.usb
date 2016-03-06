@@ -97,7 +97,7 @@ Running VMs:
 USB Devices:
 <select name="usbs" size="1">
   <?foreach (list_usbs() as $usb):?>
-  <?=mk_option("",$usb['id'],$usb['name'])?>
+  <?=mk_option("","",$usb['name'])?>
   <?endforeach;?>
 </select>
 
