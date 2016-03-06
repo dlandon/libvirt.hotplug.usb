@@ -50,7 +50,7 @@ function list_usbs()
 ?>
 
 <script>
-var URL = '/plugins/libvirt.hotplug.usb/include/VirshCmd.php';
+var URL = '/plugins/libvirt.hotplug.usb/include/virshcmd.php';
 
 function operateUSB(action) 
 {
