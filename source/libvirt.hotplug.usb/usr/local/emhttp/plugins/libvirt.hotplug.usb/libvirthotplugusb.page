@@ -52,10 +52,11 @@ function list_usbs()
 <script>
 var URL = '/plugins/<?=$plugin;?>/include/VirshCmd.php';
 
-function detachUSB(el, action) 
+function detachUSB() 
 {
   var vms = $("select[name=vms] option:selected").val();
   var usbs = $("select[name=usbs] option:selected").val();
+  $("input[name=Status]").val("Step1");
   if (vms && usbs) 
   {   
     $("input[name=Status]").val('Detaching Please wait...');
