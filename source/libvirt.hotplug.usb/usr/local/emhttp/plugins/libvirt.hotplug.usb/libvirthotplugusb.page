@@ -62,12 +62,9 @@ function detachUSB(el, action)
     $("#detach").attr("disabled", true);
     $("#attach").attr("disabled", true);
     
-    var opts = new Object();
-	opts["action"] = action;
-	opts["ID"] = $('#usbs option:selected').attr('id');
 	
 	
-    $("input[name=Status]").val(opts["ID"]);
+    $("input[name=Status]").val(usbs);
     $("#detach").val('Detach');
   }
 }
