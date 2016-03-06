@@ -22,7 +22,7 @@ $arrValidUSBDevices = getValidUSBDevices();
 
 function list_vms() {
   $out = array();
-  exec("/usr/sbin/virsh list | awk '{if (NR!=1&&NR!=2) {print $2}} | head -n-1'",$vmlist);
+  exec("/usr/sbin/virsh list | awk '{if (NR!=1&&NR!=2) {print $2}}' | head -n-1",$vmlist);
   foreach ($vmlist as $vm) 
   	{
       $out[] = array('name'=>$vm);
