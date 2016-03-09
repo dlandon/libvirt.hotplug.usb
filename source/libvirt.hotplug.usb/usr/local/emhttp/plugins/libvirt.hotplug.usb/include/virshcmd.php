@@ -22,7 +22,7 @@ $usbstr .= "<hostdev mode='subsystem' type='usb'>
 </hostdev>";
 }
 file_put_contents('/tmp/libvirthotplugusb.xml',$usbstr);
-echo shell_exec('/usr/sbin/virsh detach-device \"$vmname\" /tmp/libvirthotplugusb.xml 2>&1');
+echo shell_exec("/usr/sbin/virsh detach-device '$vmname' /tmp/libvirthotplugusb.xml 2>&1");
 break;
 		
 case 'attach':
@@ -40,7 +40,7 @@ $usbstr .= "<hostdev mode='subsystem' type='usb'>
 </hostdev>";
 }
 file_put_contents('/tmp/libvirthotplugusb.xml',$usbstr);
-echo shell_exec("/usr/sbin/virsh attach-device \"$vmname\" /tmp/libvirthotplugusb.xml 2>&1");
+echo shell_exec("/usr/sbin/virsh attach-device '$vmname' /tmp/libvirthotplugusb.xml 2>&1");
 break;
 		}
 ?>
