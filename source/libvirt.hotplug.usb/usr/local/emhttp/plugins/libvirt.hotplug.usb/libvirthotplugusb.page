@@ -16,18 +16,35 @@ Markdown="false"
 ?>
 <?
 require_once('/usr/local/emhttp/webGui/include/Helpers.php');
+require_once('/usr/local/emhttp/plugins/dynamix.vm.manager/classes/libvirt.php');
 require_once('/usr/local/emhttp/plugins/dynamix.vm.manager/classes/libvirt_helpers.php');
-	
 $arrValidUSBDevices = getValidUSBDevices();
+$uuid = $_GET['uuid'];	
+
+//Get domain variables for each domain
+$doms = $lv->get_domains();
+$vmlist=array();
+
+for ($i = 0; $i < sizeof($doms); $i++) 
+	{
+    	global $vmlist;
+    	$name = $doms[$i];
+    	$res = $lv->get_domain_by_name($name);
+    	$dom = $lv->domain_get_info($res);
+    	$state = $lv->domain_state_translate($dom['state']);
+    	if($state=='running')
+    	{	
+    		global $vmlist;
+    		$vmlist[]=array('name'=>$name);
+    	}
+    }
+
+
+
 
 function list_vms() {
-  $out = array();
-  exec("/usr/sbin/virsh list | awk '{if (NR!=1&&NR!=2) {print $2}}' | head -n-1",$vmlist);
-  foreach ($vmlist as $vm) 
-  	{
-      $out[] = array('name'=>$vm);
-	}
-  return $out;
+  global $vmlist;
+  return $vmlist;
 }
 
 function list_usbs() 

@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "libvirt.hotplug.usb">
 <!ENTITY author    "Burhan/bshakil">
-<!ENTITY version   "2016.03.09">
+<!ENTITY version   "2016.03.13">
 <!ENTITY launch    "VMs">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/bshakil/unraid-libvirt-usbhotplug/master/plugins/libvirt.hotplug.usb.plg">
 <!ENTITY source    "/boot/config/plugins/&name;/&name;">
-<!ENTITY MD5       "53e0409478be0f370eaa1dbd74dbd10f">
+<!ENTITY MD5       "2aecacfc629000fc1684a6962e3d7177">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
@@ -16,6 +16,11 @@
 ##&name;
 
 ###&version;
+
+- Using libvirt.php for Running VMs 
+- Fix for VM names with spaces
+
+###2016.03.09
 
 - launch and icon fix
 
