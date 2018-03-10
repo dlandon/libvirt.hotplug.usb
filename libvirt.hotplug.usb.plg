@@ -1,0 +1,118 @@
+<?xml version='1.0' standalone='yes'?>
+
+<!DOCTYPE PLUGIN [
+<!ENTITY name      "libvirt.hotplug.usb">
+<!ENTITY author    "dlandon">
+<!ENTITY version   "2018.03.10">
+<!ENTITY launch    "VMs">
+<!ENTITY pluginURL 	"https://github.com/dlandon/libvirt.hotplug.usb/raw/master/libvirt.hotplug.usb.plg">
+<!ENTITY MD5       "2beda6f3e8bbb88fdaada0f8ccbd905b">
+]>
+
+<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
+
+<CHANGES>
+##&name;
+###&version;
+- Update for unRAID 6.5 VM file structure changes.
+
+###2016.03.13
+- Using libvirt.php for Running VMs 
+- Fix for VM names with spaces
+
+###2016.03.09
+
+- launch and icon fix
+
+###2016.03.06
+
+- initial release for unRAID v6
+
+</CHANGES>
+
+<!--
+Copyright 2018, Dan Landon
+libvirt usb hot plug addon plugin
+-->
+
+<!-- PRE-INSTALL SCRIPT -->
+<FILE Run="/bin/bash">
+<INLINE>
+# Check unRAID version
+source /etc/unraid-version
+if [[ ${version:0:3} == 6.0 ]]; then
+  echo "unRAID version 6.1 or higher is required"
+  exit 1
+fi
+</INLINE>
+</FILE>
+
+<!--
+The 'pre-install' script.
+-->
+<FILE Run="/bin/bash">
+<INLINE>
+# Remove emhttp files so we can re-install.
+rm -rf /usr/local/emhttp/plugins/&name;/* 2>/dev/null
+
+# Remove old 'bundle' files.
+rm -f $(ls /boot/config/plugins/&name;/&name;*.tgz 2>/dev/null | grep -v '&version;')
+</INLINE>
+</FILE>
+
+<!--
+Get the plugin bundle.
+-->
+<FILE Name="/boot/config/plugins/&name;/&name;-&version;.tgz">
+<URL>"https://github.com/dlandon/&name;/raw/master/&name;-&version;.tgz"</URL>
+<MD5>&MD5;</MD5>
+</FILE>
+
+<!--
+Install the plugin bundle.
+-->
+<FILE Run="/bin/bash">
+<INLINE>
+# Create plugin directory
+mkdir /boot/config/plugins/&name; 2>/dev/null
+
+# Install the 'bundle'.
+tar -xf /boot/config/plugins/&name;/&name;-&version;.tgz -C /usr/local/emhttp/plugins 2>/dev/null
+
+# Adjust plugin permissions.
+chmod 755 -R /usr/local/emhttp/plugins/&name; 2>/dev/null
+</INLINE>
+</FILE>
+
+<!-- POST-INSTALL SCRIPT -->
+<FILE Run="/bin/bash">
+<INLINE>
+echo ""
+echo "-----------------------------------------------------------"
+echo " &name; has been installed."
+echo " This plugin requires Dynamix webGui to operate"
+echo " Copyright 2016, Burhan Shakil"
+echo " Copyright 2018, &author;"
+echo " Version: &version;"
+echo "-----------------------------------------------------------"
+echo ""
+</INLINE>
+</FILE>
+
+<!-- REMOVE SCRIPT -->
+<FILE Run="/bin/bash" Method="remove">
+<INLINE>
+# Remove all plugin files.
+rm -rf /boot/config/plugins/&name; 2>/dev/null
+rm -rf /usr/local/emhttp/plugins/&name; 2>/dev/null
+
+echo ""
+echo "-----------------------------------------------------------"
+echo " Plugin &name; has been removed."
+echo " Version: &version;"
+echo "-----------------------------------------------------------"
+echo ""
+</INLINE>
+</FILE>
+
+</PLUGIN>
