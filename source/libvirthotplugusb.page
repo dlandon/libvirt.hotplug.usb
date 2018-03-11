@@ -1,7 +1,6 @@
 Menu="VMs:2"
 Title="Libvirt Hotplug USB"
 Icon="libvirt.hotplug.usb.png"
-Markdown="false"
 ---
 <?PHP
 /* Copyright 2016, Burhan Shakil 
@@ -79,7 +78,16 @@ function operateUSB(action)
 	var vms = $("select[name=vms] option:selected").val();
 	var usbs = $("select[name=usbs] option:selected").val();
 	if (vms && usbs) {
-		$("textarea[name=Status]").val('Detaching Please wait...');
+		switch (action) {
+			case 'detach':
+				status = 'Detaching Please wait...';
+				break;
+
+			case 'attach':
+				status = 'Attaching Please wait...';
+				break;
+		}			
+		$("textarea[name=Status]").val(status);
 		$("#detach").attr("disabled", true);
 		$("#attach").attr("disabled", true);
 		var opts = new Object();
@@ -88,37 +96,59 @@ function operateUSB(action)
 		opts["USBID"] = usbs;
 		$.post(URL,opts).done(function(data){
 			if (data) {
-				$("textarea[name=Status]").val(data);
-				$("#detach").attr("disabled", false);
-				$("#attach").attr("disabled", false);
+				$("textarea[name=Status]").val(data.substr(1));
 			}
+			$("#detach").attr("disabled", false);
+			$("#attach").attr("disabled", false);
 		});
+	} else {
+		if (! vms) {
+			$("textarea[name=Status]").val('No VM Selected!');
+		} else {
+			$("textarea[name=Status]").val('No USB devices!');
+		}
 	}
 }
 </script>
 
-Running VMs:
-<select name="vms" size="1">
-	<?foreach (list_vms() as $vms):?>
-	<?=mk_option("",$vms['name'],$vms['name'])?>
-	<?endforeach;?>
-</select>
+<div style="width: 80%; float:left">
+	<p>
+		Running VMs:
+		<select name="vms" size="1">
+			<?foreach (list_vms() as $vms):?>
+			<?=mk_option("",$vms['name'],$vms['name'])?>
+			<?endforeach;?>
+		</select>
 
-USB Devices:
-<select name="usbs" size="1">
-	<?foreach (list_usbs() as $usb):?>
-	<?=mk_option("",$usb['id'],$usb['name'])?>
-	<?endforeach;?>
-</select>
+		USB Devices:
+		<select name="usbs" size="1">
+			<?foreach (list_usbs() as $usb):?>
+			<?=mk_option("",$usb['id'],$usb['name'])?>
+			<?endforeach;?>
+		</select>
 
-<input type="button" value="Detach" onclick="operateUSB('detach');" id="detach" style="margin-top:0">
-<input type="button" value="Attach" onclick="operateUSB('attach');" id="attach" style="margin-top:0">
+		<input type="button" value="Detach" onclick="operateUSB('detach');" id="detach" style="margin-top:0">
+		<input type="button" value="Attach" onclick="operateUSB('attach');" id="attach" style="margin-top:0">
+	</p>
 
-<br />
-Status:
-<br />
-<textarea readonly name="Status"></textarea>
-<br />
-<br />
+	<div>
+		Status:
+	</div>
+	<div>
+		<textarea readonly name="Status" rows=5></textarea>
+	</div>
+	<div>
+		<p>Note: Some USB Devices require detaching and attaching multiple times to be properly detected by VMs.</p>
+	</div>
+</div>
+<div style="width: 80%; float:left">
+<form markdown="1" name="virtlib_hotplug_usb">
 
-Note: Some USB Devices require detaching and attaching multiple times to be properly detected by VMs.
+> Select the VM for the USB device to be attached/detached and the USB device for the selected VM.
+>
+> If you have disconnected the device while it was attached to a VM, you will have to detach it and then re-attach it.
+
+</form>
+<input type="button" value="Refresh" onclick="refresh()">
+</div>
+

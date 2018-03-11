@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "libvirt.hotplug.usb">
 <!ENTITY author    "dlandon">
-<!ENTITY version   "2018.03.10a">
+<!ENTITY version   "2018.03.11">
 <!ENTITY launch    "VMs/libvirthotplugusb">
 <!ENTITY pluginURL 	"https://github.com/dlandon/libvirt.hotplug.usb/raw/master/libvirt.hotplug.usb.plg">
-<!ENTITY MD5       "291b9a56e6f5d01293190b24d7b6e002">
+<!ENTITY MD5       "57a254dc5663acd3adce4bd8ce49a781">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
@@ -14,6 +14,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Modifications to webgui, added help, and some code optimizations.
+
+###2018.03.10a
 - Update for unRAID 6.5 VM file structure changes.
 
 ###2016.03.13
