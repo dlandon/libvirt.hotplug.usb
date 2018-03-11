@@ -15,6 +15,7 @@ Markdown="false"
  * all copies or substantial portions of the Software.
  */
 ?>
+
 <?
 require_once('/usr/local/emhttp/webGui/include/Helpers.php');
 if (is_dir('/usr/local/emhttp/plugins/dynamix.vm.manager/classes')) {

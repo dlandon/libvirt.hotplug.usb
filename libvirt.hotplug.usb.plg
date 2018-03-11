@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "libvirt.hotplug.usb">
 <!ENTITY author    "dlandon">
-<!ENTITY version   "2018.03.10">
-<!ENTITY launch    "VMs">
+<!ENTITY version   "2018.03.10a">
+<!ENTITY launch    "VMs/libvirthotplugusb">
 <!ENTITY pluginURL 	"https://github.com/dlandon/libvirt.hotplug.usb/raw/master/libvirt.hotplug.usb.plg">
-<!ENTITY MD5       "2beda6f3e8bbb88fdaada0f8ccbd905b">
+<!ENTITY MD5       "291b9a56e6f5d01293190b24d7b6e002">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
