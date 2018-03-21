@@ -54,11 +54,11 @@ libvirt usb hot plug addon plugin
   
   if ( version_compare($version['version'],"6.1", "<") )
   {
-    echo "*********************************************************\n";
+    echo "******************************************************************\n";
     echo "\n";
-    echo "Open Files Requires unRAID version 6.1 or greater to run.\n";
+    echo "Libvirt Hotplug Usb Requires unRAID version 6.1 or greater to run.\n";
     echo "\n";
-    echo "*********************************************************\n";
+    echo "******************************************************************\n";
     exit(1);
   }
 ?>
