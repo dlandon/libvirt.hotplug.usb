@@ -9,7 +9,11 @@
 <!ENTITY MD5       "a8baeabc1d4eed404801d5594ade4fdd">
 ]>
 
-<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
+<PLUGIN name="&name;"
+		author="&author;"
+		version="&version;"
+		launch="&launch;"
+		pluginURL="&pluginURL;">
 
 <CHANGES>
 ##&name;
@@ -61,7 +65,6 @@ libvirt usb hot plug addon plugin
 ]]>
 </INLINE>
 </FILE>
-<!--
 
 <!--
 The 'pre-install' script.
