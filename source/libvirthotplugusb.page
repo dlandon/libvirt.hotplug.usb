@@ -135,7 +135,7 @@ function operateUSB(action)
 		Status:
 	</div>
 	<div>
-		<textarea readonly name="Status" rows=5></textarea>
+		<textarea readonly name="Status" rows="5"></textarea>
 	</div>
 	<div>
 		<p>Note: Some USB Devices require detaching and attaching multiple times to be properly detected by VMs.</p>

@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "libvirt.hotplug.usb">
 <!ENTITY author    "dlandon">
-<!ENTITY version   "2018.03.11">
+<!ENTITY version   "2018.03.21">
 <!ENTITY launch    "VMs/libvirthotplugusb">
 <!ENTITY pluginURL 	"https://github.com/dlandon/libvirt.hotplug.usb/raw/master/libvirt.hotplug.usb.plg">
-<!ENTITY MD5       "57a254dc5663acd3adce4bd8ce49a781">
+<!ENTITY MD5       "a8baeabc1d4eed404801d5594ade4fdd">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
@@ -14,6 +14,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Update unRAID minimum version check.
+
+###2018.03.11
 - Modifications to webgui, added help, and some code optimizations.
 
 ###2018.03.10a
@@ -38,17 +41,27 @@ Copyright 2018, Dan Landon
 libvirt usb hot plug addon plugin
 -->
 
-<!-- PRE-INSTALL SCRIPT -->
-<FILE Run="/bin/bash">
+<!-- The 'version-check' script. -->
+<FILE Run="/usr/bin/php">
 <INLINE>
-# Check unRAID version
-source /etc/unraid-version
-if [[ ${version:0:3} == 6.0 ]]; then
-  echo "unRAID version 6.1 or higher is required"
-  exit 1
-fi
+<![CDATA[
+<?
+  $version = parse_ini_file("/etc/unraid-version");
+  
+  if ( version_compare($version['version'],"6.1", "<") )
+  {
+    echo "*********************************************************\n";
+    echo "\n";
+    echo "Open Files Requires unRAID version 6.1 or greater to run.\n";
+    echo "\n";
+    echo "*********************************************************\n";
+    exit(1);
+  }
+?>
+]]>
 </INLINE>
 </FILE>
+<!--
 
 <!--
 The 'pre-install' script.
@@ -111,7 +124,7 @@ rm -rf /usr/local/emhttp/plugins/&name; 2>/dev/null
 
 echo ""
 echo "-----------------------------------------------------------"
-echo " Plugin &name; has been removed."
+echo " &name; has been removed."
 echo " Version: &version;"
 echo "-----------------------------------------------------------"
 echo ""
