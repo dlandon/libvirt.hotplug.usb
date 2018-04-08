@@ -138,17 +138,13 @@ function operateUSB(action)
 		<textarea readonly name="Status" rows="5"></textarea>
 	</div>
 	<div>
-		<p>Note: Some USB Devices require detaching and attaching multiple times to be properly detected by VMs.</p>
+		<p>Select the VM for the USB device to be attached/detached and the USB device for the selected VM.</p>
+		<p><strong>Note:</strong></p>
+		<p>Some USB Devices require detaching and attaching multiple times to be properly detected by VMs.</p>
+		<p>If you have disconnected the device while it was attached to a VM, you will have to detach it and then re-attach it.</p>
 	</div>
 </div>
 <div style="width: 80%; float:left">
-<form markdown="1" name="virtlib_hotplug_usb">
-
-> Select the VM for the USB device to be attached/detached and the USB device for the selected VM.
->
-> If you have disconnected the device while it was attached to a VM, you will have to detach it and then re-attach it.
-
-</form>
 <input type="button" value="Refresh" onclick="refresh()">
 </div>
 

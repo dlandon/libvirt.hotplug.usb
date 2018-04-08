@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "libvirt.hotplug.usb">
 <!ENTITY author    "dlandon">
-<!ENTITY version   "2018.03.21">
+<!ENTITY version   "2018.04.08">
 <!ENTITY launch    "VMs/libvirthotplugusb">
 <!ENTITY pluginURL 	"https://github.com/dlandon/libvirt.hotplug.usb/raw/master/libvirt.hotplug.usb.plg">
-<!ENTITY MD5       "a8baeabc1d4eed404801d5594ade4fdd">
+<!ENTITY MD5       "c7913ae15e773b2e8dfdc2273c4fd7e3">
 ]>
 
 <PLUGIN name="&name;"
@@ -18,6 +18,10 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Removed help and added to UI.
+- Change icon.
+
+###2018.03.21
 - Update unRAID minimum version check.
 
 ###2018.03.11
