@@ -1,6 +1,5 @@
 Menu="VMs:2"
 Title="Hotplug USB"
-Icon="libvirt.hotplug.usb.png"
 ---
 <?PHP
 /* Copyright 2016, Burhan Shakil 
@@ -125,13 +124,13 @@ USB Devices:
 	</select>
 </dl>
 
+<input type="button" value="Attach" title="Attach the USB device to the selected VM." onclick="operateUSB('attach');" id="attach" style="margin-top:0">
 <input type="button" value="Detach" title="Detach the USB device from the selected VM." onclick="operateUSB('detach');" id="detach" style="margin-top:0">
-<input type="button" value="Attach" title="Attach the USB device from the selected VM." onclick="operateUSB('attach');" id="attach" style="margin-top:0">
 
-Select the VM for the USB device to be attached/detached and the USB device for the selected VM.
+> Select the VM for the USB device to be attached/detached and the USB device for the selected VM.
 
-<dt><strong>Status:</strong></dt>
-<textarea readonly name="Status" rows="5" cols="80"title="Result of attach/detach operation." style="font-family:bitstream;width:100%"></textarea>
+<dt><strong>Result:</strong></dt>
+<textarea readonly name="Status" rows="5" cols="80" title="Result of attach/detach operation." style="font-family:bitstream;width:100%"></textarea>
 
 <strong>Note:</strong>
 

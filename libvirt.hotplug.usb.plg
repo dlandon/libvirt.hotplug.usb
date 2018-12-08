@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "libvirt.hotplug.usb">
 <!ENTITY author    "dlandon">
-<!ENTITY version   "2018.12.07">
+<!ENTITY version   "2018.12.08">
 <!ENTITY launch    "VMs/libvirthotplugusb">
 <!ENTITY pluginURL 	"https://github.com/dlandon/libvirt.hotplug.usb/raw/master/libvirt.hotplug.usb.plg">
-<!ENTITY MD5       "14a85c443d2705a5c39aebdf570896b2">
+<!ENTITY MD5       "9f4768dd96df384a6993f1f16b0d776e">
 ]>
 
 <PLUGIN name="&name;"
@@ -18,6 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Some more UI adjustments.
+
+###2018.12.07
 - Fix: Sort VMs and USB devices in alphabetic order.
 - Fix: Change UI to be more Unraid style.
 
