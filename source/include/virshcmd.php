@@ -2,9 +2,8 @@
 /* 
  *  Execute Virsh Command
  */
-?>
 
-<?
+$action = $_POST['action'];
 $vmname = $_POST['VMNAME'];
 $usbid = $_POST['USBID'];
 $usbstr = '';
@@ -20,15 +19,5 @@ if (!empty($usbid))
 }
 file_put_contents('/tmp/libvirthotplugusb.xml',$usbstr);
 
-switch ($_POST['action']) {
-	case 'detach':
-		$rc = shell_exec("/usr/sbin/virsh detach-device '$vmname' /tmp/libvirthotplugusb.xml 2>&1");
-		break;
-		
-	case 'attach':
-		$rc = shell_exec("/usr/sbin/virsh attach-device '$vmname' /tmp/libvirthotplugusb.xml 2>&1");
-		break;
-}
-
-echo $rc;
+echo "\n".shell_exec("/usr/sbin/virsh $action-device '$vmname' /tmp/libvirthotplugusb.xml 2>&1");
 ?>

@@ -1,5 +1,5 @@
 Menu="VMs:2"
-Title="Libvirt Hotplug USB"
+Title="Hotplug USB"
 Icon="libvirt.hotplug.usb.png"
 ---
 <?PHP
@@ -13,9 +13,7 @@ Icon="libvirt.hotplug.usb.png"
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
  */
-?>
 
-<?
 require_once('/usr/local/emhttp/webGui/include/Helpers.php');
 if (is_dir('/usr/local/emhttp/plugins/dynamix.vm.manager/classes')) {
 	require_once('/usr/local/emhttp/plugins/dynamix.vm.manager/classes/libvirt.php');
@@ -38,35 +36,33 @@ for ($i = 0; $i < sizeof($doms); $i++)
 	$res = $lv->get_domain_by_name($name);
 	$dom = $lv->domain_get_info($res);
 	$state = $lv->domain_state_translate($dom['state']);
-	if($state=='running')
+	if ($state == 'running')
 	{	
 		global $vmlist;
 		$vmlist[]=array('name'=>$name);
+		asort($vmlist);
 	}
 }
 
 
-function list_vms() {
-  global $vmlist;
-  return $vmlist;
-}
-
 function list_usbs() 
 {
-  global $arrValidUSBDevices;
-  $out = array();
-  	if (!empty($arrValidUSBDevices)) 
-  	{
-  		foreach($arrValidUSBDevices as $i => $arrDev) 
-   		{
-   			$out[] = array('name'=>$arrDev['name'],'id'=>$arrDev['id']);
-   		} 
-  	}
+	global $arrValidUSBDevices;
+	$out = array();
+	if (!empty($arrValidUSBDevices)) 
+	{
+		foreach($arrValidUSBDevices as $i => $arrDev) 
+		{
+			$out[] = array('name'=>$arrDev['name'],'id'=>$arrDev['id']);
+		} 
+	}
 	else 
 	{
 		$out[] = array('name'=>"None available");
 	}
-  return $out;
+
+	asort($out);
+	return $out;
 }
 ?>
 
@@ -111,40 +107,35 @@ function operateUSB(action)
 }
 </script>
 
-<div style="width: 80%; float:left">
-	<p>
-		Running VMs:
-		<select name="vms" size="1">
-			<?foreach (list_vms() as $vms):?>
-			<?=mk_option("",$vms['name'],$vms['name'])?>
-			<?endforeach;?>
-		</select>
+<div style="width: 55%; float:left">
+<form markdown="1" method="POST" action="/update.php" target="progressFrame">
+<dl>
+Running VMs:
+	<select name="vms" size="1">
+	<?foreach ($vmlist as $vms):?>
+	<?=mk_option("",$vms['name'],$vms['name'])?>
+	<?endforeach;?>
+	</select>
+&nbsp;
+USB Devices:
+	<select name="usbs" size="1">
+	<?foreach (list_usbs() as $usb):?>
+	<?=mk_option("",$usb['id'],$usb['name'])?>
+	<?endforeach;?>
+	</select>
+</dl>
 
-		USB Devices:
-		<select name="usbs" size="1">
-			<?foreach (list_usbs() as $usb):?>
-			<?=mk_option("",$usb['id'],$usb['name'])?>
-			<?endforeach;?>
-		</select>
+<input type="button" value="Detach" title="Detach the USB device from the selected VM." onclick="operateUSB('detach');" id="detach" style="margin-top:0">
+<input type="button" value="Attach" title="Attach the USB device from the selected VM." onclick="operateUSB('attach');" id="attach" style="margin-top:0">
 
-		<input type="button" value="Detach" onclick="operateUSB('detach');" id="detach" style="margin-top:0">
-		<input type="button" value="Attach" onclick="operateUSB('attach');" id="attach" style="margin-top:0">
-	</p>
+Select the VM for the USB device to be attached/detached and the USB device for the selected VM.
 
-	<div>
-		Status:
-	</div>
-	<div>
-		<textarea readonly name="Status" rows="5"></textarea>
-	</div>
-	<div>
-		<p>Select the VM for the USB device to be attached/detached and the USB device for the selected VM.</p>
-		<p><strong>Note:</strong></p>
-		<p>Some USB Devices require detaching and attaching multiple times to be properly detected by VMs.</p>
-		<p>If you have disconnected the device while it was attached to a VM, you will have to detach it and then re-attach it.</p>
-	</div>
+<dt><strong>Status:</strong></dt>
+<textarea readonly name="Status" rows="5" cols="80"title="Result of attach/detach operation." style="font-family:bitstream;width:100%"></textarea>
+
+<strong>Note:</strong>
+
+<p>Some USB Devices require detaching and attaching multiple times to be properly detected by VMs.&nbsp;&nbsp;If you have disconnected the device while it was attached to a VM, you will have to detach it and then re-attach it.</p>
+<input type="button" value="Refresh" title="Refresh this page." onclick="refresh()">
+</form>
 </div>
-<div style="width: 80%; float:left">
-<input type="button" value="Refresh" onclick="refresh()">
-</div>
-
