@@ -3,21 +3,28 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "libvirt.hotplug.usb">
 <!ENTITY author    "dlandon">
-<!ENTITY version   "2018.12.08">
+<!ENTITY version   "2019.01.14">
 <!ENTITY launch    "VMs/libvirthotplugusb">
 <!ENTITY pluginURL 	"https://github.com/dlandon/libvirt.hotplug.usb/raw/master/libvirt.hotplug.usb.plg">
-<!ENTITY MD5       "9f4768dd96df384a6993f1f16b0d776e">
+<!ENTITY supportURL	"https://forums.unraid.net/topic/70001-libvirt-hot-plugin-usb-usb-hot-plugin-for-vms/?tab=comments#comment-640678">
+<!ENTITY MD5       "72caee69b70d368b83741023fafe535b">
 ]>
 
 <PLUGIN name="&name;"
 		author="&author;"
 		version="&version;"
 		launch="&launch;"
-		pluginURL="&pluginURL;">
+		pluginURL="&pluginURL;"
+		support="&supportURL;"
+		icon="usb"
+		min="6.1.0">
 
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: icons for v6.
+
+###2018.12.08
 - Fix: Some more UI adjustments.
 
 ###2018.12.07
@@ -55,27 +62,6 @@
 Copyright 2018, Dan Landon
 libvirt usb hot plug addon plugin
 -->
-
-<!-- The 'version-check' script. -->
-<FILE Run="/usr/bin/php">
-<INLINE>
-<![CDATA[
-<?
-  $version = parse_ini_file("/etc/unraid-version");
-  
-  if ( version_compare($version['version'],"6.1", "<") )
-  {
-    echo "******************************************************************\n";
-    echo "\n";
-    echo "Libvirt Hotplug Usb Requires unRAID version 6.1 or greater to run.\n";
-    echo "\n";
-    echo "******************************************************************\n";
-    exit(1);
-  }
-?>
-]]>
-</INLINE>
-</FILE>
 
 <!--
 The 'pre-install' script.
@@ -122,7 +108,7 @@ echo "-----------------------------------------------------------"
 echo " &name; has been installed."
 echo " This plugin requires Dynamix webGui to operate"
 echo " Copyright 2016, Burhan Shakil"
-echo " Copyright 2018, Dan Landon"
+echo " Copyright 2018-2019, Dan Landon"
 echo " Version: &version;"
 echo "-----------------------------------------------------------"
 echo ""
