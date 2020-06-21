@@ -3,7 +3,7 @@ Title="Hotplug USB"
 ---
 <?PHP
 /* Copyright 2016, Burhan Shakil 
- * Copyright 2018-2019, Dan Landon
+ * Copyright 2018-2020, Dan Landon
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 3,
@@ -12,6 +12,18 @@ Title="Hotplug USB"
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
  */
+$plugin = "libvirt.hotplug.usb";
+$docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
+$translations = file_exists("$docroot/webGui/include/Translations.php");
+require_once "$docroot/plugins/$plugin/include/Legacy.php";
+?>
+<?if (!$translations):?>
+<?eval('?>'.parse_file("$docroot/plugins/$plugin/libvirthotplugusb.page"))?>
+<?else:?>
+<?
+
+// read translations
+parse_plugin('libvirthotplugusb');
 
 require_once('/usr/local/emhttp/webGui/include/Helpers.php');
 if (is_dir('/usr/local/emhttp/plugins/dynamix.vm.manager/classes')) {
@@ -66,7 +78,7 @@ function list_usbs()
 ?>
 
 <script>
-var URL = '/plugins/libvirt.hotplug.usb/include/virshcmd.php';
+var URL = '/plugins/<?=$plugin?>/include/virshcmd.php';
 
 function operateUSB(action) 
 {
@@ -75,11 +87,11 @@ function operateUSB(action)
 	if (vms && usbs) {
 		switch (action) {
 			case 'detach':
-				status = 'Detaching Please wait...';
+				status = "<?=_('Detaching Please wait')?>"+"...";
 				break;
 
 			case 'attach':
-				status = 'Attaching Please wait...';
+				status = "<?=_('Attaching Please wait')?>"+"...";
 				break;
 		}			
 		$("textarea[name=Status]").val(status);
@@ -98,9 +110,9 @@ function operateUSB(action)
 		});
 	} else {
 		if (! vms) {
-			$("textarea[name=Status]").val('No VM Selected!');
+			$("textarea[name=Status]").val("<?=_('No VM Selected')?>!");
 		} else {
-			$("textarea[name=Status]").val('No USB devices!');
+			$("textarea[name=Status]").val("<?=_('No USB devices')?>!");
 		}
 	}
 }
@@ -109,14 +121,14 @@ function operateUSB(action)
 <div style="width: 55%; float:left">
 <form markdown="1" method="POST" action="/update.php" target="progressFrame">
 <dl>
-Running VMs:
+<?=_('Running VMs')?>:
 	<select name="vms" size="1">
 	<?foreach ($vmlist as $vms):?>
 	<?=mk_option("",$vms['name'],$vms['name'])?>
 	<?endforeach;?>
 	</select>
-&nbsp;
-USB Devices:
+
+<?=_('USB Devices')?>:
 	<select name="usbs" size="1">
 	<?foreach (list_usbs() as $usb):?>
 	<?=mk_option("",$usb['id'],$usb['name'])?>
@@ -124,17 +136,23 @@ USB Devices:
 	</select>
 </dl>
 
-<input type="button" value="Attach" title="Attach the USB device to the selected VM." onclick="operateUSB('attach');" id="attach" style="margin-top:0">
-<input type="button" value="Detach" title="Detach the USB device from the selected VM." onclick="operateUSB('detach');" id="detach" style="margin-top:0">
+<input type="button" value="<?=_('Attach')?>" title="<?=_('Attach the USB device to the selected VM')?>" onclick="operateUSB('attach');" id="attach" style="margin-top:0">
+<input type="button" value="<?=_('Detach')?>" title="<?=_('Detach the USB device from the selected VM')?>" onclick="operateUSB('detach');" id="detach" style="margin-top:0">
 
+:libvirt_hot_plug:
 > Select the VM for the USB device to be attached/detached and the USB device for the selected VM.
+:end
 
-<dt><strong>Result:</strong></dt>
-<textarea readonly name="Status" rows="5" cols="80" title="Result of attach/detach operation." style="font-family:bitstream;width:100%"></textarea>
+<dt><strong><?=_('Result')?>:</strong></dt>
+<textarea readonly name="Status" rows="5" cols="80" title='_(Result of attach/detach operation)_' style="font-family:bitstream;width:100%"></textarea>
 
-<strong>Note:</strong>
+<strong><?=_('Note')?>:</strong>
 
-<p>Some USB Devices require detaching and attaching multiple times to be properly detected by VMs.&nbsp;&nbsp;If you have disconnected the device while it was attached to a VM, you will have to detach it and then re-attach it.</p>
-<input type="button" value="Refresh" title="Refresh this page." onclick="refresh()">
+<p>
+<?=_('Some USB Devices require detaching and attaching multiple times to be properly detected by VMs')?>. <?=_('If you have disconnected the device while it was attached to a VM, you will have to detach it and then re-attach it')?>.
+</p>
+
+<input type="button" value="<?=_('Refresh')?>" title="<?=_('Refresh this page')?>" onclick="refresh()">
 </form>
 </div>
+<?endif;?>
