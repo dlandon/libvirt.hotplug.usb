@@ -149,7 +149,8 @@ function operateUSB(action)
 <strong><?=_('Note')?>:</strong>
 
 <p>
-<?=_('Some USB Devices require detaching and attaching multiple times to be properly detected by VMs')?>. <?=_('If you have disconnected the device while it was attached to a VM, you will have to detach it and then re-attach it')?>.
+<?=_('Some USB Devices require detaching and attaching multiple times to be properly detected by VMs')?>.
+<?=_('If you have disconnected the device while it was attached to a VM, you will have to detach it and then re-attach it')?>.
 </p>
 
 <input type="button" value="<?=_('Refresh')?>" title="<?=_('Refresh this page')?>" onclick="refresh()">
