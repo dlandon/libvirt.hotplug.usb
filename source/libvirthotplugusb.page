@@ -78,7 +78,7 @@ function list_usbs()
 ?>
 
 <script>
-var URL = '/plugins/<?=$plugin?>/include/virshcmd.php';
+var LVURL = '/plugins/<?=$plugin?>/include/virshcmd.php';
 
 function operateUSB(action) 
 {
@@ -101,7 +101,7 @@ function operateUSB(action)
 		opts["action"] = action;
 		opts["VMNAME"] = vms;
 		opts["USBID"] = usbs;
-		$.post(URL,opts).done(function(data){
+		$.post(LVURL,opts).done(function(data){
 			if (data) {
 				$("textarea[name=Status]").val(data.substr(1));
 			}
