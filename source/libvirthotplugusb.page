@@ -3,7 +3,7 @@ Title="Hotplug USB"
 ---
 <?PHP
 /* Copyright 2016, Burhan Shakil 
- * Copyright 2018-2020, Dan Landon
+ * Copyright 2018-2021, Dan Landon
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 3,
@@ -26,13 +26,9 @@ require_once "$docroot/plugins/$plugin/include/Legacy.php";
 parse_plugin('libvirthotplugusb');
 
 require_once('/usr/local/emhttp/webGui/include/Helpers.php');
-if (is_dir('/usr/local/emhttp/plugins/dynamix.vm.manager/classes')) {
-	require_once('/usr/local/emhttp/plugins/dynamix.vm.manager/classes/libvirt.php');
-	require_once('/usr/local/emhttp/plugins/dynamix.vm.manager/classes/libvirt_helpers.php');
-} else {
-	require_once('/usr/local/emhttp/plugins/dynamix.vm.manager/include/libvirt.php');
-	require_once('/usr/local/emhttp/plugins/dynamix.vm.manager/include/libvirt_helpers.php');
-}
+require_once('/usr/local/emhttp/plugins/dynamix.vm.manager/include/libvirt.php');
+require_once('/usr/local/emhttp/plugins/dynamix.vm.manager/include/libvirt_helpers.php');
+
 $arrValidUSBDevices = getValidUSBDevices();
 $uuid = $_GET['uuid'];	
 
