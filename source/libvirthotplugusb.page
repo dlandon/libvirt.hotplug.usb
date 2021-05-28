@@ -132,13 +132,13 @@ function operateUSB(action)
 	</select>
 </dl>
 
+> Select the VM for the USB device to be attached/detached and the USB device for the selected VM.
+:end
+
 <input type="button" value="<?=_('Attach')?>" title="<?=_('Attach the USB device to the selected VM')?>" onclick="operateUSB('attach');" id="attach" style="margin-top:0">
 <input type="button" value="<?=_('Detach')?>" title="<?=_('Detach the USB device from the selected VM')?>" onclick="operateUSB('detach');" id="detach" style="margin-top:0">
 
 :libvirt_hot_plug:
-> Select the VM for the USB device to be attached/detached and the USB device for the selected VM.
-:end
-
 <dt><strong><?=_('Result')?>:</strong></dt>
 <textarea readonly name="Status" rows="5" cols="80" title='_(Result of attach/detach operation)_' style="font-family:bitstream;width:100%"></textarea>
 
@@ -146,7 +146,9 @@ function operateUSB(action)
 
 <p>
 <?=_('Some USB Devices require detaching and attaching multiple times to be properly detected by VMs')?>.
-<?=_('If you have disconnected the device while it was attached to a VM, you will have to detach it and then re-attach it')?>.
+</p>
+<p>
+<?=_('If you disconnected the USB device while it was attached to a VM, you will have to detach it and then re-attach it')?>.
 </p>
 
 <input type="button" value="<?=_('Refresh')?>" title="<?=_('Refresh this page')?>" onclick="refresh()">
