@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "libvirt.hotplug.usb">
 <!ENTITY author    "dlandon">
-<!ENTITY version   "2021.05.19">
+<!ENTITY version   "2021.05.28">
 <!ENTITY launch    "VMs/libvirthotplugusb">
 <!ENTITY pluginURL 	"https://github.com/dlandon/libvirt.hotplug.usb/raw/master/libvirt.hotplug.usb.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/70001-libvirt-hot-plugin-usb-usb-hot-plugin-for-vms/?tab=comments#comment-640678">
-<!ENTITY MD5       "2bad0a301b8e57a68ca0aed3df53386b">
+<!ENTITY MD5       "bff707397417f2b997797f7f91aee107">
 ]>
 
 <PLUGIN name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Minor UI adjustments.
+
+###2021.05.19
 - Fix: Minimum version changed to 6.7.
 - Fix: Remove unneeded images folder.
 
