@@ -22,7 +22,7 @@ require_once "$docroot/plugins/$plugin/include/Legacy.php";
 <?else:?>
 <?
 
-// read translations
+/* read translations. */
 parse_plugin('libvirthotplugusb');
 
 require_once('/usr/local/emhttp/webGui/include/Helpers.php');
@@ -32,7 +32,7 @@ require_once('/usr/local/emhttp/plugins/dynamix.vm.manager/include/libvirt_helpe
 $arrValidUSBDevices = getValidUSBDevices();
 $uuid = $_GET['uuid'];	
 
-//Get domain variables for each domain
+/* Get domain variables for each domain. */
 $doms = $lv->get_domains();
 $vmlist=array();
 
