@@ -19,5 +19,5 @@ if (!empty($usbid))
 }
 file_put_contents('/tmp/libvirthotplugusb.xml',$usbstr);
 
-echo "\n".shell_exec("/usr/sbin/virsh $action-device ".escapeshellarg($vmname)." /tmp/libvirthotplugusb.xml 2>&1");
+echo "\n".shell_exec("/usr/sbin/virsh ".escapeshellarg($action)."-device ".escapeshellarg($vmname)." /tmp/libvirthotplugusb.xml 2>&1");
 ?>
