@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "libvirt.hotplug.usb">
 <!ENTITY author    "dlandon">
-<!ENTITY version   "2021.09.17">
+<!ENTITY version   "2022.05.24">
 <!ENTITY launch    "VMs/libvirthotplugusb">
 <!ENTITY pluginURL 	"https://github.com/dlandon/libvirt.hotplug.usb/raw/master/libvirt.hotplug.usb.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/70001-libvirt-hot-plugin-usb-usb-hot-plugin-for-vms/?tab=comments#comment-640678">
-<!ENTITY MD5       "aa4b5d7cb95af4d220cc08e68a493ed7">
+<!ENTITY MD5       "0d2dd579fee0d959df3309c57459113a">
 ]>
 
 <PLUGIN name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add: Plugin update check.
+
+###2022.09.17
 - Fix: Code review and cleanup.
 
 ###2021.08.21
@@ -81,9 +84,17 @@
 </CHANGES>
 
 <!--
-Copyright 2018-2021, Dan Landon
+Copyright 2018-2022, Dan Landon
 libvirt usb hot plug addon plugin
 -->
+
+<!--
+Get the plugin bundle.
+-->
+<FILE Name="/boot/config/plugins/&name;/&name;-&version;.tgz">
+<URL>"https://github.com/dlandon/&name;/raw/master/&name;-&version;.tgz"</URL>
+<MD5>&MD5;</MD5>
+</FILE>
 
 <!--
 The 'pre-install' script.
@@ -96,14 +107,6 @@ rm -rf /usr/local/emhttp/plugins/&name;/* 2>/dev/null
 # Remove old 'bundle' files.
 rm -f $(ls /boot/config/plugins/&name;/&name;*.tgz 2>/dev/null | grep -v '&version;')
 </INLINE>
-</FILE>
-
-<!--
-Get the plugin bundle.
--->
-<FILE Name="/boot/config/plugins/&name;/&name;-&version;.tgz">
-<URL>"https://github.com/dlandon/&name;/raw/master/&name;-&version;.tgz"</URL>
-<MD5>&MD5;</MD5>
 </FILE>
 
 <!--
@@ -124,7 +127,7 @@ echo "-----------------------------------------------------------"
 echo " &name; has been installed."
 echo " This plugin requires Dynamix webGui to operate"
 echo " Copyright 2016, Burhan Shakil"
-echo " Copyright 2018-2021, Dan Landon"
+echo " Copyright 2018-2022, Dan Landon"
 echo " Version: &version;"
 echo "-----------------------------------------------------------"
 echo ""
