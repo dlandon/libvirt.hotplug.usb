@@ -4,7 +4,7 @@
  */
 
 $action = $_POST['action'];
-$vmname = $_POST['VMNAME'];
+$vmname = "$_POST['VMNAME']";
 $usbid = $_POST['USBID'];
 $usbstr = '';
 if (!empty($usbid)) 
