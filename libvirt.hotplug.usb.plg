@@ -22,7 +22,7 @@
 <CHANGES>
 ##&name;
 ###&version;
-- FIx: Php error.
+- Fix: Php error.
 
 ###2022.05.24
 - Add: Plugin update check.
