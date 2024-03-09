@@ -1,4 +1,4 @@
-<?PHP
+<?php
 /* 
  *  Execute Virsh Command
  */
@@ -7,6 +7,7 @@ $action = $_POST['action'];
 $vmname = $_POST['VMNAME'];
 $usbid = $_POST['USBID'];
 $usbstr = '';
+
 if (!empty($usbid)) 
 {
 	$usbx = explode(':', $usbid);
@@ -17,7 +18,14 @@ if (!empty($usbid))
 </source>
 </hostdev>";
 }
-file_put_contents('/tmp/libvirthotplugusb.xml',$usbstr);
 
-echo "\n".shell_exec("/usr/sbin/virsh ".escapeshellarg($action)."-device ".escapeshellarg($vmname)." /tmp/libvirthotplugusb.xml 2>&1");
+file_put_contents('/tmp/libvirthotplugusb.xml', $usbstr);
+
+/* Lookup up the virsh command since the path can change with different versions of Unraid. */
+$virshPath = trim(shell_exec('whereis -b virsh | cut -d " " -f 2'));
+
+/* Execute the virsh command. */
+$command = "{$virshPath} ".escapeshellarg($action)."-device ".escapeshellarg($vmname)." /tmp/libvirthotplugusb.xml 2>&1";
+
+echo "\n".shell_exec($command);
 ?>
