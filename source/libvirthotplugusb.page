@@ -3,7 +3,7 @@ Title="Hotplug USB"
 ---
 <?PHP
 /* Copyright 2016, Burhan Shakil 
- * Copyright 2018-2023, Dan Landon
+ * Copyright 2018-2024, Dan Landon
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 3,
@@ -118,7 +118,6 @@ $(function() {
 		caPluginUpdateCheck("libvirt.hotplug.usb.plg");
 	}
 });
-
 </script>
 
 <div style="width: 55%; float:left">
@@ -146,7 +145,7 @@ $(function() {
 <input type="button" value="<?=_('Detach')?>" title="<?=_('Detach the USB device from the selected VM')?>" onclick="operateUSB('detach');" id="detach" style="margin-top:0">
 
 :libvirt_hot_plug:
-<dt><strong><?=_('Result')?>:</strong></dt>
+<strong><?=_('Result')?>:</strong>
 <textarea readonly name="Status" rows="5" cols="80" title='_(Result of attach/detach operation)_' style="font-family:bitstream;width:100%"></textarea>
 
 <strong><?=_('Note')?>:</strong>
