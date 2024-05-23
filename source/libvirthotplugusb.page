@@ -1,5 +1,6 @@
 Menu="VMs:2"
 Title="Hotplug USB"
+Cond="$var['mdState'] == 'STARTED'"
 ---
 <?PHP
 /* Copyright 2016, Burhan Shakil 
@@ -120,7 +121,7 @@ $(function() {
 });
 </script>
 
-<div style="width: 55%; float:left">
+<div style="width:55%; float:left">
 <form markdown="1" method="POST" action="/update.php" target="progressFrame">
 <dl>
 <?=_('Running VMs')?>:
