@@ -2,9 +2,9 @@ Menu="VMs:2"
 Title="Hotplug USB"
 Cond="$var['mdState'] == 'STARTED'"
 ---
-<?PHP
+<?php
 /* Copyright 2016, Burhan Shakil 
- * Copyright 2018-2024, Dan Landon
+ * Copyright 2018-2025, Dan Landon
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 3,
@@ -13,25 +13,26 @@ Cond="$var['mdState'] == 'STARTED'"
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
  */
-$plugin = "libvirt.hotplug.usb";
-$docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
-$translations = file_exists("$docroot/webGui/include/Translations.php");
-require_once "$docroot/plugins/$plugin/include/Legacy.php";
 ?>
-<?if (!$translations):?>
-<?eval('?>'.parse_file("$docroot/plugins/$plugin/libvirthotplugusb.page"))?>
-<?else:?>
+
+<?
+/* Define our plugin name. */
+define('LIBVIRT_HOTPLUG_PLUGIN', 'libvirt.hotplug.usb');
+
+/* Define the docroot path. */
+if (!defined('DOCROOT')) {
+	define('DOCROOT', $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp');
+}
+?>
+
+<?if ($var['mdState'] == 'STARTED'):?>
 <?
 
-/* read translations. */
-parse_plugin('libvirthotplugusb');
-
-require_once('/usr/local/emhttp/webGui/include/Helpers.php');
-require_once('/usr/local/emhttp/plugins/dynamix.vm.manager/include/libvirt.php');
-require_once('/usr/local/emhttp/plugins/dynamix.vm.manager/include/libvirt_helpers.php');
+require_once(DOCROOT.'/webGui/include/Helpers.php');
+require_once(DOCROOT.'/plugins/dynamix.vm.manager/include/libvirt.php');
+require_once(DOCROOT.'/plugins/dynamix.vm.manager/include/libvirt_helpers.php');
 
 $arrValidUSBDevices = getValidUSBDevices();
-$uuid = $_GET['uuid'];	
 
 /* Get domain variables for each domain. */
 $doms = $lv->get_domains();
@@ -75,12 +76,12 @@ function list_usbs()
 ?>
 
 <script>
-var LVURL = '/plugins/<?=$plugin?>/include/virshcmd.php';
+const LVURL = '/plugins/<?=LIBVIRT_HOTPLUG_PLUGIN?>/include/virshcmd.php';
 
 function operateUSB(action) 
 {
-	var vms = $("select[name=vms] option:selected").val();
-	var usbs = $("select[name=usbs] option:selected").val();
+	let vms = $("select[name=vms] option:selected").val();
+	let usbs = $("select[name=usbs] option:selected").val();
 	if (vms && usbs) {
 		switch (action) {
 			case 'detach':
@@ -94,7 +95,7 @@ function operateUSB(action)
 		$("textarea[name=Status]").val(status);
 		$("#detach").attr("disabled", true);
 		$("#attach").attr("disabled", true);
-		var opts = new Object();
+		let opts = new Object();
 		opts["action"] = action;
 		opts["VMNAME"] = vms;
 		opts["USBID"] = usbs;

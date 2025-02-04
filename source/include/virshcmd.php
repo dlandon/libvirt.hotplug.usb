@@ -3,10 +3,10 @@
  *  Execute Virsh Command
  */
 
-$action = $_POST['action'];
-$vmname = $_POST['VMNAME'];
-$usbid = $_POST['USBID'];
-$usbstr = '';
+$action	= htmlspecialchars(urldecode($_POST['action']));
+$vmname	= htmlspecialchars(urldecode($_POST['VMNAME']));
+$usbid	= htmlspecialchars(urldecode($_POST['USBID']));
+$usbstr	= '';
 
 if (!empty($usbid)) 
 {
