@@ -2,12 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"libvirt.hotplug.usb">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2024.05.23">
+<!ENTITY version	"2025.02.04">
 <!ENTITY launch		"VMs/libvirthotplugusb">
 <!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/70001-libvirt-hot-plugin-usb-usb-hot-plugin-for-vms/?tab=comments#comment-640678">
-<!ENTITY MD5		"d96bc2ec16946d8d0c8b9d6ae55717a0">
+<!ENTITY MD5		"566dfa2e965cce5f0176c3cbc3ef1ce3">
 ]>
 
 <PLUGIN name="&name;"
@@ -17,11 +17,17 @@
 	pluginURL="&pluginURL;"
 	support="&supportURL;"
 	icon="usb"
-	min="6.7.0">
+	min="6.11.0">
 
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Change some variables to constants that shouldn't be variables.
+- Fix: Code changes for reliability and robustness.
+- Fix: Change Unraid minimum version to 6.11.
+- Fix: Language translation updates.
+
+###2024.05.23
 - Fix: display aberation when the array is stopped.
 
 ###2024.03.09
@@ -99,7 +105,7 @@
 </CHANGES>
 
 <!--
-Copyright 2018-2022, Dan Landon
+Copyright 2018-2025, Dan Landon
 libvirt usb hot plug addon plugin
 -->
 
@@ -142,7 +148,7 @@ echo "-----------------------------------------------------------"
 echo " &name; has been installed."
 echo " This plugin requires Dynamix webGui to operate"
 echo " Copyright 2016, Burhan Shakil"
-echo " Copyright 2018-2024, Dan Landon"
+echo " Copyright 2018-2025, Dan Landon"
 echo " Version: &version;"
 echo "-----------------------------------------------------------"
 echo ""
