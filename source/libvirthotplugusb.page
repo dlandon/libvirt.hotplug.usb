@@ -1,6 +1,6 @@
 Menu="VMs:2"
 Title="Hotplug USB"
-Cond="$var['mdState'] == 'STARTED'"
+Cond="$var['fsState'] == 'Started'"
 ---
 <?php
 /* Copyright 2016, Burhan Shakil 
@@ -25,7 +25,7 @@ if (!defined('DOCROOT')) {
 }
 ?>
 
-<?if ($var['mdState'] == 'STARTED'):?>
+<?if ($var['fsState'] == 'Started'):?>
 <?
 
 require_once(DOCROOT.'/webGui/include/Helpers.php');
