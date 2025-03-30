@@ -22,7 +22,7 @@ if (!empty($usbid))
 file_put_contents('/tmp/libvirthotplugusb.xml', $usbstr);
 
 /* Lookup up the virsh command since the path can change with different versions of Unraid. */
-$virshPath = trim(shell_exec('whereis -b virsh | cut -d " " -f 2'));
+$virshPath = trim(shell_exec('/usr/bin/whereis -b virsh | cut -d " " -f 2'));
 
 /* Execute the virsh command. */
 $command = "{$virshPath} ".escapeshellarg($action)."-device ".escapeshellarg($vmname)." /tmp/libvirthotplugusb.xml 2>&1";
