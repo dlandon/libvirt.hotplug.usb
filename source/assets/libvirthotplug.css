@@ -1,0 +1,19 @@
+/* Responsive UI adjustments. */
+.lh-result-textbox {
+	width: 900px !important;
+	max-width: 100% !important;
+	box-sizing: border-box;
+	font-family:bitstream;
+}
+
+.lh-vm-select {
+	width: 100px !important;
+	max-width: 100% !important;
+	box-sizing: border-box;
+}
+
+.lh-device-select {
+	width: 500px !important;
+	max-width: 100% !important;
+	box-sizing: border-box;
+}
