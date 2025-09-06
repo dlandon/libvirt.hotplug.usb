@@ -25,6 +25,8 @@ if (!defined('DOCROOT')) {
 }
 ?>
 
+<link rel="stylesheet" href="<?autov("/plugins/libvirt.hotplug.usb/assets/libvirthotplug.css")?>">
+
 <?if ($var['fsState'] == 'Started'):?>
 <?
 
@@ -122,36 +124,36 @@ $(function() {
 });
 </script>
 
-<div style="width:55%; float:left">
+<div>
 <form markdown="1" method="POST" action="/update.php" target="progressFrame">
 <dl>
-<?=_('Running VMs')?>:
-	<select name="vms" size="1">
-	<?foreach ($vmlist as $vms):?>
-	<?=mk_option("",$vms['name'],$vms['name'])?>
-	<?endforeach;?>
+<strong><?=_('Running VMs')?>:</strong>
+	<select name="vms" size="1" class="lh-vm-select">
+		<?foreach ($vmlist as $vms):?>
+			<?=mk_option("",$vms['name'],$vms['name'])?>
+		<?endforeach;?>
 	</select>
 
-<?=_('USB Devices')?>:
-	<select name="usbs" size="1">
-	<?foreach (list_usbs() as $usb):?>
-	<?=mk_option("",$usb['id'],$usb['name'])?>
-	<?endforeach;?>
+<strong><?=_('USB Devices')?>:</strong>
+	<select name="usbs" size="1" class="lh-device-select">
+		<?foreach (list_usbs() as $usb):?>
+			<?=mk_option("",$usb['id'],$usb['name'])?>
+		<?endforeach;?>
 	</select>
 </dl>
 
+:libvirt_hot_plug:
 > Select the VM for the USB device to be attached/detached and the USB device for the selected VM.
 :end
 
 <input type="button" value="<?=_('Attach')?>" title="<?=_('Attach the USB device to the selected VM')?>" onclick="operateUSB('attach');" id="attach" style="margin-top:0">
 <input type="button" value="<?=_('Detach')?>" title="<?=_('Detach the USB device from the selected VM')?>" onclick="operateUSB('detach');" id="detach" style="margin-top:0">
 
-:libvirt_hot_plug:
-<strong><?=_('Result')?>:</strong>
-<textarea readonly name="Status" rows="5" cols="80" title='_(Result of attach/detach operation)_' style="font-family:bitstream;width:100%"></textarea>
+<strong><?=_('Result');?>:</strong>
 
-<strong><?=_('Note')?>:</strong>
+<textarea class="lh-result-textbox" readonly name="Status" rows="7" cols="80" title='_(Result of attach/detach operation)_'></textarea>
 
+<strong><?=_('Note');?>:</strong>
 <p>
 <?=_('Some USB Devices require detaching and attaching multiple times to be properly detected by VMs')?>.
 </p>
