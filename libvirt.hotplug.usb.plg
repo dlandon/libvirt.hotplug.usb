@@ -2,12 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"libvirt.hotplug.usb">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2025.09.06">
+<!ENTITY version	"2025.09.09">
 <!ENTITY launch		"VMs/libvirthotplugusb">
 <!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/70001-libvirt-hot-plugin-usb-usb-hot-plugin-for-vms/?tab=comments#comment-640678">
-<!ENTITY MD5		"f7c1a2669b934caa26bb938027bf084a">
+<!ENTITY MD5		"50c5c5eaa0d5e1b172c7f99d7a2075b1">
 ]>
 
 <PLUGIN name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: UI fixes for Unraid 7.2.
+
+###2025.09.06
 - Fix: Some minor code cleanup.
 - Fix: UI changes for Responsive Design implementation in Unraid.
 
