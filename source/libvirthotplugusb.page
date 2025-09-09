@@ -15,6 +15,8 @@ Cond="$var['fsState'] == 'Started'"
  */
 ?>
 
+<link rel="stylesheet" href="<?autov("/plugins/libvirt.hotplug.usb/assets/libvirthotplug.css")?>">
+
 <?
 /* Define our plugin name. */
 define('LIBVIRT_HOTPLUG_PLUGIN', 'libvirt.hotplug.usb');
@@ -24,8 +26,6 @@ if (!defined('DOCROOT')) {
 	define('DOCROOT', $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp');
 }
 ?>
-
-<link rel="stylesheet" href="<?autov("/plugins/libvirt.hotplug.usb/assets/libvirthotplug.css")?>">
 
 <?if ($var['fsState'] == 'Started'):?>
 <?
@@ -77,6 +77,48 @@ function list_usbs()
 }
 ?>
 
+<form markdown="1" method="POST" action="/update.php" target="progressFrame">
+<span class="inline-block">
+<strong><?=_('Running VMs')?>:</strong>
+	<select name="vms" size="1" class="lh-vm-select">
+		<?foreach ($vmlist as $vms):?>
+			<?=mk_option("",$vms['name'],$vms['name'])?>
+		<?endforeach;?>
+	</select>
+</span>
+&nbsp;
+<span class="inline-block">
+<strong><?=_('USB Devices')?>:</strong>
+	<select name="usbs" size="1" class="lh-device-select">
+		<?foreach (list_usbs() as $usb):?>
+			<?=mk_option("",$usb['id'],$usb['name'])?>
+		<?endforeach;?>
+	</select>
+</span>
+
+:libvirt_hot_plug:
+> Select the VM for the USB device to be attached/detached and the USB device for the selected VM.
+:end
+
+<input type="button" value="<?=_('Attach')?>" title="<?=_('Attach the USB device to the selected VM')?>" onclick="operateUSB('attach');" id="attach" style="margin-top:0">
+<input type="button" value="<?=_('Detach')?>" title="<?=_('Detach the USB device from the selected VM')?>" onclick="operateUSB('detach');" id="detach" style="margin-top:0">
+
+<strong><?=_('Result');?>:</strong>
+
+<textarea class="lh-result-textbox" readonly name="Status" rows="7" cols="80" title='_(Result of attach/detach operation)_'></textarea>
+
+<strong><?=_('Note');?>:</strong>
+<p>
+<?=_('Some USB Devices require detaching and attaching multiple times to be properly detected by VMs')?>.
+</p>
+<p>
+<?=_('If you disconnected the USB device while it was attached to a VM, you will have to detach it and then re-attach it')?>.
+</p>
+
+<input type="button" value="<?=_('Refresh')?>" title="<?=_('Refresh this page')?>" onclick="refresh()">
+</form>
+<?endif;?>
+
 <script>
 const LVURL = '/plugins/<?=LIBVIRT_HOTPLUG_PLUGIN?>/include/virshcmd.php';
 
@@ -123,45 +165,3 @@ $(function() {
 	}
 });
 </script>
-
-<div>
-<form markdown="1" method="POST" action="/update.php" target="progressFrame">
-<dl>
-<strong><?=_('Running VMs')?>:</strong>
-	<select name="vms" size="1" class="lh-vm-select">
-		<?foreach ($vmlist as $vms):?>
-			<?=mk_option("",$vms['name'],$vms['name'])?>
-		<?endforeach;?>
-	</select>
-
-<strong><?=_('USB Devices')?>:</strong>
-	<select name="usbs" size="1" class="lh-device-select">
-		<?foreach (list_usbs() as $usb):?>
-			<?=mk_option("",$usb['id'],$usb['name'])?>
-		<?endforeach;?>
-	</select>
-</dl>
-
-:libvirt_hot_plug:
-> Select the VM for the USB device to be attached/detached and the USB device for the selected VM.
-:end
-
-<input type="button" value="<?=_('Attach')?>" title="<?=_('Attach the USB device to the selected VM')?>" onclick="operateUSB('attach');" id="attach" style="margin-top:0">
-<input type="button" value="<?=_('Detach')?>" title="<?=_('Detach the USB device from the selected VM')?>" onclick="operateUSB('detach');" id="detach" style="margin-top:0">
-
-<strong><?=_('Result');?>:</strong>
-
-<textarea class="lh-result-textbox" readonly name="Status" rows="7" cols="80" title='_(Result of attach/detach operation)_'></textarea>
-
-<strong><?=_('Note');?>:</strong>
-<p>
-<?=_('Some USB Devices require detaching and attaching multiple times to be properly detected by VMs')?>.
-</p>
-<p>
-<?=_('If you disconnected the USB device while it was attached to a VM, you will have to detach it and then re-attach it')?>.
-</p>
-
-<input type="button" value="<?=_('Refresh')?>" title="<?=_('Refresh this page')?>" onclick="refresh()">
-</form>
-</div>
-<?endif;?>
