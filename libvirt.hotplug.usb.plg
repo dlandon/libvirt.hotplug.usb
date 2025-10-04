@@ -2,12 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"libvirt.hotplug.usb">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2025.10.04">
+<!ENTITY version	"2025.10.04a">
 <!ENTITY launch		"VMs/libvirthotplugusb">
 <!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/70001-libvirt-hot-plugin-usb-usb-hot-plugin-for-vms/?tab=comments#comment-640678">
-<!ENTITY MD5		"ec721abe0e7530cde61ec087fee2acbc">
+<!ENTITY MD5		"ec83eb2ae3c0a241f4998553b50c9d36">
 ]>
 
 <PLUGIN name="&name;"
@@ -23,7 +23,7 @@
 ##&name;
 ###&version;
 - Fix: Enable Unraid style tooltips.
-- Rem: Remove excessive tooltips.
+- Rem: Remove unnecessary tooltips.
 
 ###2025.09.09
 - Fix: UI fixes for Unraid 7.2.
