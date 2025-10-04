@@ -160,6 +160,18 @@ function operateUSB(action)
 }
 
 $(function() {
+	$('.tooltip').tooltipster({
+		trigger: 'custom',
+		triggerOpen: {
+			mouseenter: true
+		},
+		triggerClose: {
+			click: false,
+			scroll: true,
+			mouseleave: true
+		}
+	});
+
 	if ( typeof caPluginUpdateCheck === "function" ) {
 		caPluginUpdateCheck("libvirt.hotplug.usb.plg");
 	}
