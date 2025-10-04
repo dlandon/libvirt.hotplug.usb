@@ -100,12 +100,12 @@ function list_usbs()
 > Select the VM for the USB device to be attached/detached and the USB device for the selected VM.
 :end
 
-<input type="button" value="<?=_('Attach')?>" title="<?=_('Attach the USB device to the selected VM')?>" onclick="operateUSB('attach');" id="attach" style="margin-top:0">
-<input type="button" value="<?=_('Detach')?>" title="<?=_('Detach the USB device from the selected VM')?>" onclick="operateUSB('detach');" id="detach" style="margin-top:0">
+<input type="button" value="<?=_('Attach')?>" class="tooltip" title="<?=_('Attach the USB device to the selected VM')?>" onclick="operateUSB('attach');" id="attach" style="margin-top:0">
+<input type="button" value="<?=_('Detach')?>" class="tooltip" title="<?=_('Detach the USB device from the selected VM')?>" onclick="operateUSB('detach');" id="detach" style="margin-top:0">
 
 <strong><?=_('Result');?>:</strong>
 
-<textarea class="lh-result-textbox" readonly name="Status" rows="7" cols="80" title='_(Result of attach/detach operation)_'></textarea>
+<textarea class="lh-result-textbox" readonly name="Status" rows="7" cols="80"></textarea>
 
 <strong><?=_('Note');?>:</strong>
 <p>
@@ -115,7 +115,7 @@ function list_usbs()
 <?=_('If you disconnected the USB device while it was attached to a VM, you will have to detach it and then re-attach it')?>.
 </p>
 
-<input type="button" value="<?=_('Refresh')?>" title="<?=_('Refresh this page')?>" onclick="refresh()">
+<input type="button" value="<?=_('Refresh')?>" onclick="refresh()">
 </form>
 <?endif;?>
 
