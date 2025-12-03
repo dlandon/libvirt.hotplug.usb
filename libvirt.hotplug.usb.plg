@@ -2,12 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"libvirt.hotplug.usb">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2025.10.04a">
+<!ENTITY version	"2025.12.03">
 <!ENTITY launch		"VMs/libvirthotplugusb">
-<!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
+<!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/v&version;">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/70001-libvirt-hot-plugin-usb-usb-hot-plugin-for-vms/?tab=comments#comment-640678">
-<!ENTITY MD5		"ec83eb2ae3c0a241f4998553b50c9d36">
+<!ENTITY MD5		"92b938729551cffa6032bb153211d704">
 ]>
 
 <PLUGIN name="&name;"
@@ -17,11 +17,17 @@
 	pluginURL="&pluginURL;"
 	support="&supportURL;"
 	icon="usb"
-	min="6.11.0">
+	min="6.12.0">
 
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Minimum Unraid version changed to 6.12.  There have been too many UI changes to maintain backwards compatibility.
+
+###2025.10.04a
+- Fix: More UI fixes for Unraid 7.2.
+
+###2025.10.04a
 - Fix: Enable Unraid style tooltips.
 - Rem: Remove unnecessary tooltips.
 
