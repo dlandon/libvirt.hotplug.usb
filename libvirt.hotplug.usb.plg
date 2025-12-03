@@ -22,6 +22,7 @@
 <CHANGES>
 ##&name;
 ###&version;
+- New: First releaase with versioning.
 - Fix: Minimum Unraid version changed to 6.12.  There have been too many UI changes to maintain backwards compatibility.
 
 ###2025.10.04a
