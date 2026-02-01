@@ -1,20 +1,23 @@
 <?php
-/* 
+/*
  *  Execute Virsh Command
  */
 
 $action	= htmlspecialchars(urldecode($_POST['action']));
 $vmname	= htmlspecialchars(urldecode($_POST['VMNAME']));
 $usbid	= htmlspecialchars(urldecode($_POST['USBID']));
+$usbbus	= htmlspecialchars(urldecode($_POST['USBBUS']));
+$usbdevice	= htmlspecialchars(urldecode($_POST['USBDEVICE']));
 $usbstr	= '';
 
-if (!empty($usbid)) 
+if (!empty($usbid))
 {
 	$usbx = explode(':', $usbid);
 	$usbstr .= "<hostdev mode='subsystem' type='usb'>
 <source>
 <vendor id='0x".$usbx[0]."'/>
 <product id='0x".$usbx[1]."'/>
+<address type='usb' bus='" . $usbbus . "' device='" . $usbdevice . "'/>
 </source>
 </hostdev>";
 }

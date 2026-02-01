@@ -3,8 +3,8 @@ Title="Hotplug USB"
 Cond="$var['fsState'] == 'Started'"
 ---
 <?php
-/* Copyright 2016, Burhan Shakil 
- * Copyright 2018-2026, Dan Landon
+/* Copyright 2016, Burhan Shakil
+ * Copyright 2018-2026, Naphtaline
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 3,
@@ -34,21 +34,61 @@ require_once(DOCROOT.'/webGui/include/Helpers.php');
 require_once(DOCROOT.'/plugins/dynamix.vm.manager/include/libvirt.php');
 require_once(DOCROOT.'/plugins/dynamix.vm.manager/include/libvirt_helpers.php');
 
-$arrValidUSBDevices = getValidUSBDevices();
+// this function replace the getValidUSBDevices() from archieved repo dynamix.vm.manager
+function get_complete_usb_devices_infos()
+{
+	exec("lsusb 2>/dev/null", $arrAllUSBDevices);
+
+	$arrToReturn = [];
+
+	foreach ($arrAllUSBDevices as $strUSBDevice) {
+		if (preg_match('/Bus (?P<bus>\d{3}) Device (?P<device>\d{3}): ID (?P<id_1>....):(?P<id_2>....) (?P<name>.*)/', $strUSBDevice, $newDevice)) {
+
+			$newDevice["bus"] = (int)$newDevice["bus"];
+			$newDevice["device"] = (int)$newDevice["device"];
+
+			if (stripos($GLOBALS['var']['flashGUID'], $newDevice["id_1"] . "-" . $newDevice["id_2"]) === 0) {
+				//Device id matches the unraid boot device, skip device
+				continue;
+			}
+
+			if (strcmp($newDevice["id_1"],"1d6b") == 0 &&
+					(strcmp($newDevice["id_2"], "0001") == 0 ||
+					strcmp($newDevice["id_2"], "0002") == 0 ||
+					strcmp($newDevice["id_2"], "0003") == 0)) {
+					// in this case, the device is a hub
+					continue;
+			}
+
+			$newDevice["id"] = $newDevice["id_1"] . ":" . $newDevice["id_2"];
+			if (strcmp($newDevice["name"], "") == 0) {
+					$newDevice["name"] = "[unnamed device] " . $newDevice["id_1"] . ":" . $newDevice["id_2"] . $newDevice["bus"] . " device:" . $newDevice["device"];
+			} else {
+					$newDevice["name"] = $newDevice["name"] . " | Bus:"  . $newDevice["bus"] . " Device:" . $newDevice["device"];
+			}
+			array_push($arrToReturn, $newDevice);
+		}
+	}
+
+	return $arrToReturn;
+}
+
+$arrValidUSBDevices = get_complete_usb_devices_infos();
 
 /* Get domain variables for each domain. */
 $doms = $lv->get_domains();
 $vmlist=array();
 
-for ($i = 0; $i < sizeof($doms); $i++) 
+for ($i = 0; $i < sizeof($doms); $i++)
 {
 	global $vmlist;
 	$name = $doms[$i];
 	$res = $lv->get_domain_by_name($name);
 	$dom = $lv->domain_get_info($res);
 	$state = $lv->domain_state_translate($dom['state']);
+
 	if ($state == 'running')
-	{	
+	{
 		global $vmlist;
 		$vmlist[]=array('name'=>$name);
 		asort($vmlist);
@@ -56,18 +96,18 @@ for ($i = 0; $i < sizeof($doms); $i++)
 }
 
 
-function list_usbs() 
+function list_usbs()
 {
 	global $arrValidUSBDevices;
 	$out = array();
-	if (!empty($arrValidUSBDevices)) 
+	if (!empty($arrValidUSBDevices))
 	{
-		foreach($arrValidUSBDevices as $i => $arrDev) 
+		foreach($arrValidUSBDevices as $i => $arrDev)
 		{
-			$out[] = array('name'=>$arrDev['name'],'id'=>$arrDev['id']);
-		} 
+			$out[] = array('name'=>$arrDev['name'],'id'=>$arrDev['id'], 'bus'=>$arrDev['bus'], 'device'=>$arrDev['device']);
+		}
 	}
-	else 
+	else
 	{
 		$out[] = array('name'=>"None available");
 	}
@@ -89,9 +129,9 @@ function list_usbs()
 &nbsp;
 <span class="inline-block">
 <strong><?=_('USB Devices')?>:</strong>
-	<select name="usbs" size="1" class="lh-device-select">
+	<select name="usbs" size="1" class="lh-device-select" id="selectedUSBDevice">
 		<?foreach (list_usbs() as $usb):?>
-			<?=mk_option("",$usb['id'],$usb['name'])?>
+			<?=mk_option("",$usb['id'],$usb['name'], "data-bus=" . $usb['bus'] . " " . "data-device=" . $usb['device'])?>
 		<?endforeach;?>
 	</select>
 </span>
@@ -122,11 +162,18 @@ function list_usbs()
 <script>
 const LVURL = '/plugins/<?=LIBVIRT_HOTPLUG_PLUGIN?>/include/virshcmd.php';
 
-function operateUSB(action) 
+function operateUSB(action)
 {
-	let vms = $("select[name=vms] option:selected").val();
-	let usbs = $("select[name=usbs] option:selected").val();
-	if (vms && usbs) {
+	let vmSelected = $("select[name=vms] option:selected");
+	let usbSelected = $("select[name=usbs] option:selected");
+
+	let vm = vmSelected.val();
+	let usbid = usbSelected.val();
+
+	let bus = usbSelected.attr('data-bus');
+	let device = usbSelected.attr('data-device');
+
+	if (vm && usbid) {
 		switch (action) {
 			case 'detach':
 				status = "<?=_('Detaching Please wait')?>"+"...";
@@ -135,14 +182,16 @@ function operateUSB(action)
 			case 'attach':
 				status = "<?=_('Attaching Please wait')?>"+"...";
 				break;
-		}			
+		}
 		$("textarea[name=Status]").val(status);
 		$("#detach").attr("disabled", true);
 		$("#attach").attr("disabled", true);
 		let opts = new Object();
 		opts["action"] = action;
-		opts["VMNAME"] = vms;
-		opts["USBID"] = usbs;
+		opts["VMNAME"] = vm;
+		opts["USBID"] = usbid;
+		opts["USBBUS"] = bus;
+		opts["USBDEVICE"] = device;
 		$.post(LVURL,opts).done(function(data){
 			if (data) {
 				$("textarea[name=Status]").val(data.substr(1));
@@ -151,7 +200,7 @@ function operateUSB(action)
 			$("#attach").attr("disabled", false);
 		});
 	} else {
-		if (! vms) {
+		if (! vm) {
 			$("textarea[name=Status]").val("<?=_('No VM Selected')?>!");
 		} else {
 			$("textarea[name=Status]").val("<?=_('No USB devices')?>!");
