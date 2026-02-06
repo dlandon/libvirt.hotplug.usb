@@ -34,7 +34,7 @@ require_once(DOCROOT.'/webGui/include/Helpers.php');
 require_once(DOCROOT.'/plugins/dynamix.vm.manager/include/libvirt.php');
 require_once(DOCROOT.'/plugins/dynamix.vm.manager/include/libvirt_helpers.php');
 
-// this function replace the getValidUSBDevices() from archieved repo dynamix.vm.manager
+// this function replace the getValidUSBDevices() which dosn't provide bus and device data
 function get_complete_usb_devices_infos()
 {
 	exec("lsusb 2>/dev/null", $arrAllUSBDevices);
