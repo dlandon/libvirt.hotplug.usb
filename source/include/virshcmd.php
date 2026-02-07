@@ -3,6 +3,8 @@
  *  Execute Virsh Command
  */
 
+header('Content-Type: application/json');
+
 $action		= urldecode($_POST['action']);
 $vmname		= urldecode($_POST['VMNAME']);
 $usbid		= urldecode($_POST['USBID']);
@@ -27,5 +29,12 @@ $command = "{$virshPath} ".escapeshellarg($action)."-device ".escapeshellarg($vm
 
 sleep(2);
 
-echo "\n".shell_exec($command);
+$out = [];
+$rc = 0;
+exec($command, $out, $rc);
+
+echo json_encode([
+	'rc'		=> (int)$rc,
+	'output'	=> implode("\n", $out),
+], JSON_UNESCAPED_SLASHES);
 ?>

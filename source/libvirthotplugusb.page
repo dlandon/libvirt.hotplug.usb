@@ -92,7 +92,7 @@ function get_complete_usb_devices_infos(): array
 		$dev	= (int)$m['device'];
 		$vid	= strtolower($m['vid']);
 		$pid	= strtolower($m['pid']);
-		$id	= $vid.':'.$pid;
+		$id		= $vid.':'.$pid;
 		$name	= trim((string)$m['name']);
 
 		/* Skip Unraid boot device. */
@@ -201,8 +201,8 @@ function get_vm_attached_usb_ids(string $vmname): array
 $arrValidUSBDevices = get_complete_usb_devices_infos();
 
 /* Get domain variables for each domain. */
-$doms = $lv->get_domains();
-$vmlist = [];
+$doms	= $lv->get_domains();
+$vmlist	= [];
 
 /* Build list of running VMs. */
 for ($i = 0; $i < sizeof($doms); $i++) {
@@ -226,8 +226,8 @@ if (!empty($vmlist)) {
 /* Build a VM => attached USB (vid:pid) map for button enable/disable logic. */
 $vm_attached_map = [];
 foreach ($vmlist as $vm) {
-	$vmname = (string)$vm['name'];
-	$vm_attached_map[$vmname] = get_vm_attached_usb_ids($vmname);
+	$vmname						= (string)$vm['name'];
+	$vm_attached_map[$vmname]	= get_vm_attached_usb_ids($vmname);
 }
 
 function list_usbs(): array
@@ -258,7 +258,7 @@ function list_usbs(): array
 
 <form markdown="1" method="POST" action="/update.php" target="progressFrame">
 <span class="inline-block">
-<strong><?=_('Running VMs')?>:</strong>
+<strong>_(Running VMs)_:</strong>
 	<select name="vms" size="1" class="lh-vm-select">
 		<?php foreach ($vmlist as $vms): ?>
 			<?=mk_option("", $vms['name'], $vms['name'])?>
@@ -267,7 +267,7 @@ function list_usbs(): array
 </span>
 &nbsp;&nbsp;
 <span class="inline-block">
-<strong><?=_('USB Devices')?>:</strong>
+<strong>_(USB Devices)_:</strong>
 	<select name="usbs" size="1" class="lh-device-select" id="selectedUSBDevice">
 		<?=mk_option("", "", "Select a USB device")?>
 		<?php foreach (list_usbs() as $usb): ?>
@@ -284,15 +284,15 @@ function list_usbs(): array
 	<button type="button" id="usbAction" class="tooltip" title="_(Select a USB device to continue)_" onclick="operateUSB();" disabled>_(Select USB)_</button>
 </span>
 
-<strong><?=_('Result');?>:</strong>
+<strong>_(Result)_:</strong>
 
 <textarea class="lh-result-textbox" readonly name="Status" rows="7" cols="80"></textarea>
 
-<strong><?=_('Note');?>:</strong>
-<p><?=_('Some USB Devices require detaching and attaching multiple times to be properly detected by VMs')?>.</p>
-<p><?=_('If you disconnected the USB device while it was attached to a VM, you will have to detach it and then re-attach it')?>.</p>
+<strong>_(Note)_:</strong>
+<p>_(Some USB Devices require detaching and attaching multiple times to be properly detected by VMs)_.</p>
+<p>_(If you disconnected the USB device while it was attached to a VM)_, _(you will have to detach it and then re-attach it)_.</p>
 
-<input type="button" value="<?=_('Refresh')?>" onclick="refresh()">
+<input type="button" value="_(Refresh)_" onclick="refresh()"><button type="button" onclick='done()'>_(Done)_</button>
 </form>
 
 <script>
@@ -303,7 +303,7 @@ function setUSBActionButton(label, tooltip, action, enabled)
 {
 	const $btn = $('#usbAction');
 
-	$btn.text(label)
+	$btn.html(label)
 	    .prop('disabled', !enabled)
 	    .data('action', action || null);
 
@@ -364,9 +364,9 @@ function operateUSB()
 	}
 
 	const vmSel	= $('select[name=vms]');
-	const usbSel	= $('select[name=usbs] option:selected');
+	const usbSel = $('select[name=usbs] option:selected');
 
-	const vm	= vmSel.val();
+	const vm = vmSel.val();
 	const usbid	= usbSel.val();
 
 	if (!vm || !usbid) {
@@ -375,12 +375,23 @@ function operateUSB()
 
 	setUSBActionButton(
 		action === 'attach'
-			? '<?= _("Attaching…") ?>'
-			: '<?= _("Detaching…") ?>',
-		'',
+			? "<i class='fa fa-spinner fa-spin'></i> <?=_('Attaching');?>"
+			: "<i class='fa fa-spinner fa-spin'></i> <?=_('Detaching');?>",
+		'<?=_("Operation in progress…");?>',
 		null,
 		false
 	);
+
+	switch (action) {
+		case 'detach':
+			status = "<?=_('Detaching Please wait')?>...";
+			break;
+
+		case 'attach':
+			status = "<?=_('Attaching Please wait')?>...";
+			break;
+	}
+	$("textarea[name=Status]").val(status);
 
 	const opts = {
 		action:		action,
@@ -391,22 +402,37 @@ function operateUSB()
 	};
 
 	$.post(LVURL, opts).done(function (data) {
-		if (data) {
-			$('textarea[name=Status]').val(data.substr(1));
-		}
+		let rc = 1;
+		let output = '';
 
-		if (!VM_USB_ATTACHED[vm]) {
-			VM_USB_ATTACHED[vm] = {};
-		}
-
-		if (action === 'attach') {
-			VM_USB_ATTACHED[vm][usbid] = true;
+		if (typeof data === 'object' && data !== null) {
+			rc = parseInt(data.rc, 10);
+			output = String(data.output || '');
 		} else {
-			delete VM_USB_ATTACHED[vm][usbid];
+			/* Backward compatibility if something returns plain text. */
+			output = String(data || '');
+			rc = (/^\s*error:/mi.test(output)) ? 1 : 0;
 		}
 
-		updateUSBActionButton();
-	});
+		if (output) {
+			$('textarea[name=Status]').val(output);
+		}
+ 
+ 		if (!VM_USB_ATTACHED[vm]) {
+ 			VM_USB_ATTACHED[vm] = {};
+ 		}
+ 
+		/* Only update local state on success. */
+		if (rc === 0) {
+			if (action === 'attach') {
+				VM_USB_ATTACHED[vm][usbid] = true;
+			} else {
+				delete VM_USB_ATTACHED[vm][usbid];
+			}
+ 		}
+ 
+ 		updateUSBActionButton();
+ 	});
 }
 
 $(function () {
