@@ -25,5 +25,7 @@ $virshPath = trim(shell_exec('/usr/bin/whereis -b virsh | cut -d " " -f 2'));
 /* Execute the virsh command. */
 $command = "{$virshPath} ".escapeshellarg($action)."-device ".escapeshellarg($vmname)." /tmp/libvirthotplugusb.xml 2>&1";
 
+sleep(2);
+
 echo "\n".shell_exec($command);
 ?>
