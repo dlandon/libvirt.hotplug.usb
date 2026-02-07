@@ -4,7 +4,8 @@ Cond="$var['fsState'] == 'Started'"
 ---
 <?php
 /* Copyright 2016, Burhan Shakil
- * Copyright 2018-2026, Naphtaline
+ * Copyright 2018-2026, Dan Landon
+ * Copyright 2026, Naphtaline
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 3,
@@ -34,45 +35,106 @@ require_once(DOCROOT.'/webGui/include/Helpers.php');
 require_once(DOCROOT.'/plugins/dynamix.vm.manager/include/libvirt.php');
 require_once(DOCROOT.'/plugins/dynamix.vm.manager/include/libvirt_helpers.php');
 
-// this function replace the getValidUSBDevices() which dosn't provide bus and device data
-function get_complete_usb_devices_infos()
+/* This function replaces getValidUSBDevices() from archived repo dynamix.vm.manager. */
+function get_complete_usb_devices_infos(): array
 {
-	exec("lsusb 2>/dev/null", $arrAllUSBDevices);
+	$devices	= [];
+	$lines		= [];
 
-	$arrToReturn = [];
+	exec('lsusb 2>/dev/null', $lines);
 
-	foreach ($arrAllUSBDevices as $strUSBDevice) {
-		if (preg_match('/Bus (?P<bus>\d{3}) Device (?P<device>\d{3}): ID (?P<id_1>....):(?P<id_2>....) (?P<name>.*)/', $strUSBDevice, $newDevice)) {
+	$flashGuid = (string)($GLOBALS['var']['flashGUID'] ?? '');
 
-			$newDevice["bus"] = (int)$newDevice["bus"];
-			$newDevice["device"] = (int)$newDevice["device"];
-
-			if (stripos($GLOBALS['var']['flashGUID'], $newDevice["id_1"] . "-" . $newDevice["id_2"]) === 0) {
-				//Device id matches the unraid boot device, skip device
-				continue;
-			}
-
-			if (strcmp($newDevice["id_1"],"1d6b") == 0 &&
-					(strcmp($newDevice["id_2"], "0001") == 0 ||
-					strcmp($newDevice["id_2"], "0002") == 0 ||
-					strcmp($newDevice["id_2"], "0003") == 0)) {
-					// in this case, the device is a hub
-					continue;
-			}
-
-			$newDevice["id"] = $newDevice["id_1"] . ":" . $newDevice["id_2"];
-			if (strcmp($newDevice["name"], "") == 0) {
-					$newDevice["name"] = "[unnamed device] " . $newDevice["id_1"] . ":" . $newDevice["id_2"] . $newDevice["bus"] . " device:" . $newDevice["device"];
-			} else {
-					$newDevice["name"] = $newDevice["name"] . " | Bus:"  . $newDevice["bus"] . " Device:" . $newDevice["device"];
-			}
-			array_push($arrToReturn, $newDevice);
+	/* First pass: parse and filter. */
+	$parsed = [];
+	foreach ($lines as $line) {
+		if (!preg_match(
+			'/Bus (?P<bus>\d{3}) Device (?P<device>\d{3}): ID (?P<vid>[0-9a-fA-F]{4}):(?P<pid>[0-9a-fA-F]{4}) (?P<name>.*)$/',
+			$line,
+			$m
+		)) {
+			continue;
 		}
+
+		$bus	= (int)$m['bus'];
+		$dev	= (int)$m['device'];
+		$vid	= strtolower($m['vid']);
+		$pid	= strtolower($m['pid']);
+		$name	= trim((string)$m['name']);
+
+		/* Skip Unraid boot device. */
+		if ($flashGuid !== '' && stripos($flashGuid, $vid . '-' . $pid) === 0) {
+			continue;
+		}
+
+		/* Skip Linux root hubs. */
+		if ($vid === '1d6b' && in_array($pid, ['0001', '0002', '0003'], true)) {
+			continue;
+		}
+
+		$parsed[] = [
+			'bus'	=> $bus,
+			'device'=> $dev,
+			'id_1'	=> $vid,
+			'id_2'	=> $pid,
+			'id'	=> $vid . ':' . $pid,
+			'name'	=> $name,
+		];
 	}
 
-	return $arrToReturn;
+	/* Count duplicates by "same name" (case-insensitive, trimmed). */
+	$nameCounts = [];
+	foreach ($parsed as $d) {
+		$key = strtolower(trim($d['name']));
+		if ($key === '') {
+			/* Treat unnamed devices as unique per Bus/Device to avoid collapsing. */
+			$key = '__unnamed__|'.$d['id'].'|'.$d['bus'].'|'.$d['device'];
+		}
+		$nameCounts[$key] = ($nameCounts[$key] ?? 0) + 1;
+	}
+
+	/* Emit:
+	 * - If the same name shows up more than once: show all and append Bus/Device.
+	 * - Otherwise: show only one entry for that name (suppress duplicates) and omit Bus/Device.
+	 */
+	$emittedSingleName = [];
+
+	foreach ($parsed as $d) {
+		$nameKey = strtolower(trim($d['name']));
+		$isUnnamed = false;
+
+		if ($nameKey === '') {
+			$isUnnamed = true;
+			$nameKey = '__unnamed__|'.$d['id'].'|'.$d['bus'].'|'.$d['device'];
+		}
+
+		$isDupName = (($nameCounts[$nameKey] ?? 0) > 1);
+
+		if (!$isDupName && !$isUnnamed) {
+			if (isset($emittedSingleName[$nameKey])) {
+				continue;
+			}
+			$emittedSingleName[$nameKey] = true;
+		}
+
+		$baseName = ($d['name'] === '') ? sprintf('[unnamed device] %s', $d['id']) : $d['name'];
+
+		$displayName = $isDupName ? sprintf('%s | Bus:%d Device:%d', $baseName, $d['bus'], $d['device']) : $baseName;
+
+		$devices[] = [
+			'bus'	=> $d['bus'],
+			'device'=> $d['device'],
+			'id_1'	=> $d['id_1'],
+			'id_2'	=> $d['id_2'],
+			'id'	=> $d['id'],
+			'name'	=> $displayName,
+		];
+	}
+
+	return $devices;
 }
 
+/* Get array of usb devices. */
 $arrValidUSBDevices = get_complete_usb_devices_infos();
 
 /* Get domain variables for each domain. */
@@ -82,10 +144,11 @@ $vmlist=array();
 for ($i = 0; $i < sizeof($doms); $i++)
 {
 	global $vmlist;
-	$name = $doms[$i];
-	$res = $lv->get_domain_by_name($name);
-	$dom = $lv->domain_get_info($res);
-	$state = $lv->domain_state_translate($dom['state']);
+
+	$name	= $doms[$i];
+	$res	= $lv->get_domain_by_name($name);
+	$dom	= $lv->domain_get_info($res);
+	$state	= $lv->domain_state_translate($dom['state']);
 
 	if ($state == 'running')
 	{
@@ -106,13 +169,12 @@ function list_usbs()
 		{
 			$out[] = array('name'=>$arrDev['name'],'id'=>$arrDev['id'], 'bus'=>$arrDev['bus'], 'device'=>$arrDev['device']);
 		}
-	}
-	else
-	{
+	} else {
 		$out[] = array('name'=>"None available");
 	}
 
 	asort($out);
+
 	return $out;
 }
 ?>
@@ -148,12 +210,8 @@ function list_usbs()
 <textarea class="lh-result-textbox" readonly name="Status" rows="7" cols="80"></textarea>
 
 <strong><?=_('Note');?>:</strong>
-<p>
-<?=_('Some USB Devices require detaching and attaching multiple times to be properly detected by VMs')?>.
-</p>
-<p>
-<?=_('If you disconnected the USB device while it was attached to a VM, you will have to detach it and then re-attach it')?>.
-</p>
+<p><?=_('Some USB Devices require detaching and attaching multiple times to be properly detected by VMs')?>.</p>
+<p><?=_('If you disconnected the USB device while it was attached to a VM, you will have to detach it and then re-attach it')?>.</p>
 
 <input type="button" value="<?=_('Refresh')?>" onclick="refresh()">
 </form>
