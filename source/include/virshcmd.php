@@ -3,23 +3,18 @@
  *  Execute Virsh Command
  */
 
-$action	= htmlspecialchars(urldecode($_POST['action']));
-$vmname	= htmlspecialchars(urldecode($_POST['VMNAME']));
-$usbid	= htmlspecialchars(urldecode($_POST['USBID']));
-$usbbus	= htmlspecialchars(urldecode($_POST['USBBUS']));
-$usbdevice	= htmlspecialchars(urldecode($_POST['USBDEVICE']));
-$usbstr	= '';
+$action		= urldecode($_POST['action']);
+$vmname		= urldecode($_POST['VMNAME']);
+$usbid		= urldecode($_POST['USBID']);
+$usbbus		= urldecode($_POST['USBBUS']);
+$usbdevice	= urldecode($_POST['USBDEVICE']);
 
-if (!empty($usbid))
+if ($usbid)
 {
-	$usbx = explode(':', $usbid);
-	$usbstr .= "<hostdev mode='subsystem' type='usb'>
-<source>
-<vendor id='0x".$usbx[0]."'/>
-<product id='0x".$usbx[1]."'/>
-<address type='usb' bus='" . $usbbus . "' device='" . $usbdevice . "'/>
-</source>
-</hostdev>";
+	$usbx	= explode(':', $usbid);
+	$usbstr	= "<hostdev mode='subsystem' type='usb'><source><vendor id='0x".$usbx[0]."'/><product id='0x".$usbx[1]."'/><address type='usb' bus='" . $usbbus . "' device='" . $usbdevice . "'/></source></hostdev>";
+} else {
+	$usbstr	= '';
 }
 
 file_put_contents('/tmp/libvirthotplugusb.xml', $usbstr);
