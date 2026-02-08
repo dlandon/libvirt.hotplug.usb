@@ -18,7 +18,7 @@ Cond="$var['fsState'] == 'Started'"
 
 <link rel="stylesheet" href="<?autov("/plugins/libvirt.hotplug.usb/assets/libvirthotplug.css")?>">
 
-<?php
+<?
 /* Define our plugin name. */
 define('LIBVIRT_HOTPLUG_PLUGIN', 'libvirt.hotplug.usb');
 
@@ -178,7 +178,7 @@ function get_vm_attached_usb_ids(string $vmname): array
 
 	exec('virsh dumpxml '.escapeshellarg($vmname).' 2>/dev/null', $xmlLines);
 
-	if (!empty($xmlLines)) {
+	if ($xmlLines) {
 		$xml = implode("\n", $xmlLines);
 
 		if (preg_match_all(
@@ -217,7 +217,7 @@ for ($i = 0; $i < sizeof($doms); $i++) {
 }
 
 /* Sort VM list by name. */
-if (!empty($vmlist)) {
+if ($vmlist) {
 	usort($vmlist, function($a, $b) {
 		return strcasecmp((string)$a['name'], (string)$b['name']);
 	});
@@ -235,7 +235,7 @@ function list_usbs(): array
 	$out = [];
 	$devices = $GLOBALS['arrValidUSBDevices'] ?? [];
 
-	if (!empty($devices)) {
+	if ($devices) {
 		foreach ($devices as $arrDev) {
 			$out[] = [
 				'name'	=> $arrDev['name'],
@@ -309,7 +309,7 @@ function setUSBActionButton(label, tooltip, action, enabled)
 
 	/* Update Tooltipster content (NOT the title attribute) */
 	if ($btn.hasClass('tooltipstered')) {
-		$btn.tooltipster('content', tooltip || '_(Operation in progress)...');
+		$btn.tooltipster('content', tooltip || '_(Operation in progress)_...');
 	}
 }
 
@@ -376,7 +376,7 @@ function operateUSB()
 		action === 'attach'
 			? "<i class='fa fa-spinner fa-spin'></i> _(Attaching)_"
 			: "<i class='fa fa-spinner fa-spin'></i> _(Detaching)_",
-		'_(Operation in progress)_...',
+		'',
 		null,
 		false
 	);
