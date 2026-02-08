@@ -260,19 +260,19 @@ function list_usbs(): array
 <span class="inline-block">
 <strong>_(Running VMs)_:</strong>
 	<select name="vms" size="1" class="lh-vm-select">
-		<?php foreach ($vmlist as $vms): ?>
+		<?foreach ($vmlist as $vms):?>
 			<?=mk_option("", $vms['name'], $vms['name'])?>
-		<?php endforeach; ?>
+		<?endforeach;?>
 	</select>
 </span>
 &nbsp;&nbsp;
 <span class="inline-block">
 <strong>_(USB Devices)_:</strong>
 	<select name="usbs" size="1" class="lh-device-select" id="selectedUSBDevice">
-		<?=mk_option("", "", "Select a USB device")?>
-		<?php foreach (list_usbs() as $usb): ?>
+		<?=mk_option("", "", _('Select a USB device'))?>
+		<?foreach (list_usbs() as $usb):?>
 			<?=mk_option("", $usb['id'], $usb['name'], "data-bus=".$usb['bus']." data-device=".$usb['device'])?>
-		<?php endforeach; ?>
+		<?endforeach;?>
 	</select>
 </span>
 
@@ -309,10 +309,9 @@ function setUSBActionButton(label, tooltip, action, enabled)
 
 	/* Update Tooltipster content (NOT the title attribute) */
 	if ($btn.hasClass('tooltipstered')) {
-		$btn.tooltipster('content', tooltip || '<?=_("Operation in progress")?>...');
+		$btn.tooltipster('content', tooltip || '_(Operation in progress)...');
 	}
 }
-
 
 /*
  * Update the single USB action button based on VM + USB selection.
@@ -325,8 +324,8 @@ function updateUSBActionButton()
 	/* Default: no USB selected */
 	if (!vm || !usbid) {
 		setUSBActionButton(
-			'<?= _("Select USB") ?>',
-			'<?= _("Select a USB device to continue") ?>',
+			'_(Select USB)_',
+			'_(Select a USB device to continue)_',
 			null,
 			false
 		);
@@ -338,15 +337,15 @@ function updateUSBActionButton()
 
 	if (isAttached) {
 		setUSBActionButton(
-			'<?= _("Detach USB") ?>',
-			'<?= _("Detach this USB device from the selected VM") ?>',
+			'<i class="fa fa-unlink"></i>&nbsp;_(Detach USB)_',
+			'_(Detach this USB device from the selected VM)_',
 			'detach',
 			true
 		);
 	} else {
 		setUSBActionButton(
-			'<?= _("Attach USB") ?>',
-			'<?= _("Attach this USB device to the selected VM") ?>',
+			'<i class="fa fa-plug"></i>&nbsp;_(Attach USB)_',
+			'_(Attach this USB device to the selected VM)_',
 			'attach',
 			true
 		);
@@ -375,20 +374,20 @@ function operateUSB()
 
 	setUSBActionButton(
 		action === 'attach'
-			? "<i class='fa fa-spinner fa-spin'></i> <?=_('Attaching');?>"
-			: "<i class='fa fa-spinner fa-spin'></i> <?=_('Detaching');?>",
-		'<?=_("Operation in progress…");?>',
+			? "<i class='fa fa-spinner fa-spin'></i> _(Attaching)_"
+			: "<i class='fa fa-spinner fa-spin'></i> _(Detaching)_",
+		'_(Operation in progress)_...',
 		null,
 		false
 	);
 
 	switch (action) {
 		case 'detach':
-			status = "<?=_('Detaching Please wait')?>...";
+			status = "_(Detaching Please wait)_...";
 			break;
 
 		case 'attach':
-			status = "<?=_('Attaching Please wait')?>...";
+			status = "_(Attaching Please wait)_...";
 			break;
 	}
 	$("textarea[name=Status]").val(status);
