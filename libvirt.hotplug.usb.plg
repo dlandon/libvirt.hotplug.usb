@@ -8,7 +8,7 @@
 <!ENTITY tgzURL		"https://raw.githubusercontent.com/&author;/&name;/v&version;">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/70001-libvirt-hot-plugin-usb-usb-hot-plugin-for-vms/?tab=comments#comment-640678">
-<!ENTITY MD5		"e3a08b4e40cea63f33fbc37b200e027d">
+<!ENTITY MD5		"53b1ebefe5b55583d128d199d0b75b04">
 ]>
 
 <PLUGIN name="&name;"
