@@ -29,8 +29,8 @@ $command = "{$virshPath} ".escapeshellarg($action)."-device ".escapeshellarg($vm
 
 sleep(2);
 
-$out = [];
-$rc = 0;
+$out	= [];
+$rc		= 0;
 exec($command, $out, $rc);
 
 echo json_encode([
