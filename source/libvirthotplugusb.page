@@ -205,14 +205,16 @@ $doms	= $lv->get_domains();
 $vmlist	= [];
 
 /* Build list of running VMs. */
-for ($i = 0; $i < sizeof($doms); $i++) {
-	$name	= $doms[$i];
-	$res	= $lv->get_domain_by_name($name);
-	$dom	= $lv->domain_get_info($res);
-	$state	= $lv->domain_state_translate($dom['state']);
+if (is_array($doms) && $doms) {
+	for ($i = 0; $i < sizeof($doms); $i++) {
+		$name	= $doms[$i];
+		$res	= $lv->get_domain_by_name($name);
+		$dom	= $lv->domain_get_info($res);
+		$state	= $lv->domain_state_translate($dom['state']);
 
-	if ($state == 'running') {
-		$vmlist[] = ['name' => $name];
+		if ($state == 'running') {
+			$vmlist[] = ['name' => $name];
+		}
 	}
 }
 
