@@ -169,7 +169,7 @@ function get_complete_usb_devices_infos(): array
 	return $devices;
 }
 
-/* Return a set of attached USB IDs (vid:pid) for a given VM (running). */
+/* Return a set of attached USB keys (vid:pid@BBB:DDD) for a given VM (running). */
 function get_vm_attached_usb_ids(string $vmname): array
 {
 	$attached	= [];
@@ -182,14 +182,19 @@ function get_vm_attached_usb_ids(string $vmname): array
 		$xml = implode("\n", $xmlLines);
 
 		if (preg_match_all(
-			'/<hostdev\b[^>]*\btype=[\'"]usb[\'"][^>]*>.*?<source>.*?<vendor\b[^>]*\bid=[\'"]0x([0-9a-fA-F]{4})[\'"][^>]*\/>.*?<product\b[^>]*\bid=[\'"]0x([0-9a-fA-F]{4})[\'"][^>]*\/>.*?<\/source>.*?<\/hostdev>/s',
+			'/<hostdev\b[^>]*\btype=[\'"]usb[\'"][^>]*>.*?<source>.*?<vendor\b[^>]*\bid=[\'"]0x([0-9a-fA-F]{4})[\'"][^>]*\/>.*?<product\b[^>]*\bid=[\'"]0x([0-9a-fA-F]{4})[\'"][^>]*\/>.*?<address\b[^>]*\bbus=[\'"](\d+)[\'"]\s+device=[\'"](\d+)[\'"][^>]*\/>.*?<\/source>.*?<\/hostdev>/s',
 			$xml,
 			$matches,
 			PREG_SET_ORDER
 		)) {
 			foreach ($matches as $m) {
-				$id = strtolower($m[1]).':'.strtolower($m[2]);
-				$attached[$id] = true;
+				$vid	= strtolower($m[1]);
+				$pid	= strtolower($m[2]);
+				$bus3	= sprintf('%03d', (int)$m[3]);
+				$dev3	= sprintf('%03d', (int)$m[4]);
+
+				$key = $vid.':'.$pid.'@'.$bus3.':'.$dev3;
+				$attached[$key] = true;
 			}
 		}
 	}
@@ -273,7 +278,12 @@ function list_usbs(): array
 	<select name="usbs" size="1" class="lh-device-select" id="selectedUSBDevice">
 		<?=mk_option("", "", _('Select a USB device'))?>
 		<?foreach (list_usbs() as $usb):?>
-			<?=mk_option("", $usb['id'], $usb['name'], "data-bus=".$usb['bus']." data-device=".$usb['device'])?>
+		<?php
+			$bus3	= sprintf('%03d', (int)$usb['bus']);
+			$dev3	= sprintf('%03d', (int)$usb['device']);
+			$key	= $usb['id'].'@'.$bus3.':'.$dev3;
+		?>
+		<?=mk_option("", $key, $usb['name'], "data-id=".$usb['id']." data-bus=".$bus3." data-device=".$dev3)?>
 		<?endforeach;?>
 	</select>
 </span>
@@ -291,8 +301,10 @@ function list_usbs(): array
 <textarea class="lh-result-textbox" readonly name="Status" rows="7" cols="80"></textarea>
 
 <strong>_(Note)_:</strong>
-<p>_(Some USB Devices require detaching and attaching multiple times to be properly detected by VMs)_.</p>
-<p>_(If you disconnected the USB device while it was attached to a VM)_, _(you will have to detach it and then re-attach it)_.</p>
+<ul>
+	<li>_(Some USB Devices require detaching and attaching multiple times to be properly detected by VMs)_.</li>
+	<li>_(If you disconnected the USB device while it was attached to a VM)_, _(you will have to detach it and then re-attach it)_.</li>
+</ul>
 
 <input type="button" value="_(Refresh)_" onclick="refresh()"><button type="button" onclick='done()'>_(Done)_</button>
 </form>
@@ -337,6 +349,7 @@ function updateUSBActionButton()
 	const attachedSet = VM_USB_ATTACHED[vm] || {};
 	const isAttached = !!attachedSet[usbid];
 
+	/* Update the action button. */
 	if (isAttached) {
 		setUSBActionButton(
 			'<i class="fa fa-unlink"></i>&nbsp;_(Detach USB)_',
@@ -394,10 +407,12 @@ function operateUSB()
 	}
 	$("textarea[name=Status]").val(status);
 
+	const vidpid	= String(usbid).split('@')[0];	/* "vid:pid@BBB:DDD" -> "vid:pid" */
+
 	const opts = {
 		action:		action,
 		VMNAME:		vm,
-		USBID:		usbid,
+		USBID:		vidpid,
 		USBBUS:		usbSel.attr('data-bus'),
 		USBDEVICE:	usbSel.attr('data-device')
 	};
@@ -447,8 +462,19 @@ $(function () {
 		caPluginUpdateCheck('libvirt.hotplug.usb.plg');
 	}
 
-	$('select[name=vms]').on('change', updateUSBActionButton);
-	$('select[name=usbs]').on('change', updateUSBActionButton);
+	function clearStatusBox()
+	{
+		$('textarea[name=Status]').val('');
+	}
+
+	function onSelectionChanged()
+	{
+		clearStatusBox();
+		updateUSBActionButton();
+	}
+
+	$('select[name=vms]').on('change', onSelectionChanged);
+	$('select[name=usbs]').on('change', onSelectionChanged);
 
 	updateUSBActionButton();
 });
