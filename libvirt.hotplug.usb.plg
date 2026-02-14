@@ -25,7 +25,7 @@
 ###&version;
 - Fix: Change UI notes to a list.
 - Fix: Refactored USB hotplug logic to uniquely identify devices by VID:PID + bus/device.
-- Add: Detach now uses the exact <hostdev> block from virsh dumpxml, eliminating XML mismatch and enumeration drift issues.
+- Add: Detach now uses the exact hostdev block from virsh dumpxml, eliminating XML mismatch and enumeration drift issues.
 
 ###2026.02.08
 - Add: Allow use of multiple identical USB devices.
