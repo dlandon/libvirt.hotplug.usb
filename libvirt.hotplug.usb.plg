@@ -2,13 +2,13 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"libvirt.hotplug.usb">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2026.02.08">
+<!ENTITY version	"2026.02.14">
 <!ENTITY launch		"VMs/libvirthotplugusb">
 <!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
 <!ENTITY tgzURL		"https://raw.githubusercontent.com/&author;/&name;/v&version;">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/70001-libvirt-hot-plugin-usb-usb-hot-plugin-for-vms/?tab=comments#comment-640678">
-<!ENTITY MD5		"53b1ebefe5b55583d128d199d0b75b04">
+<!ENTITY MD5		"8624b5e2adc80c2994c4ff310a9daa0b">
 ]>
 
 <PLUGIN name="&name;"
@@ -23,6 +23,11 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Change UI notes to a list.
+- Fix: Refactored USB hotplug logic to uniquely identify devices by VID:PID + bus/device.
+- Add: Detach now uses the exact <hostdev> block from virsh dumpxml, eliminating XML mismatch and enumeration drift issues.
+
+###2026.02.08
 - Add: Allow use of multiple identical USB devices.
 - Add: Single Attach/Detach button that shows 'Attach' or 'Detach' depending on the current attached status of the USB device.
 - Add: Slow Attach/Detach operation so it is clear in the UI that the operation is working.
