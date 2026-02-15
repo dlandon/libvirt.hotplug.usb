@@ -72,10 +72,10 @@ function is_usb_hub_device(int $bus, int $dev): bool
 /* This function replaces getValidUSBDevices() from archived repo dynamix.vm.manager. */
 function get_complete_usb_devices_infos(): array
 {
-	$devices		= [];
-	$lines			= [];
-	$parsed			= [];
-	$nameCounts		= [];
+	$devices			= [];
+	$lines				= [];
+	$parsed				= [];
+	$nameCounts			= [];
 	$emittedSingleName	= [];
 
 	exec('lsusb 2>/dev/null', $lines);
@@ -278,7 +278,7 @@ function list_usbs(): array
 	<select name="usbs" size="1" class="lh-device-select" id="selectedUSBDevice">
 		<?=mk_option("", "", _('Select a USB device'))?>
 		<?foreach (list_usbs() as $usb):?>
-		<?php
+		<?
 			$bus3	= sprintf('%03d', (int)$usb['bus']);
 			$dev3	= sprintf('%03d', (int)$usb['device']);
 			$key	= $usb['id'].'@'.$bus3.':'.$dev3;
