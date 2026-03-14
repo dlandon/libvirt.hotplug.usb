@@ -7,11 +7,13 @@ A Plugin for Hot-plugging USB Devices to Running VMs. Libvirt Hotplug USB allows
 To install this plugin manually, enter either of the URLs below in the Enter URL field of the Plugins page.  The URL below will either install the latest or a specific version you choose.
 
 ### Latest version:
+
 Copy the URL below exactly as shown:
 
 https://raw.githubusercontent.com/dlandon/libvirt.hotplug.usb/master/libvirt.hotplug.usb.plg
 
 ### Specific version:
+
 Copy the URL below exactly as shown:
 
 https://raw.githubusercontent.com/dlandon/libvirt.hotplug.usb/vYYYY.MM.DD/libvirt.hotplug.usb.plg
