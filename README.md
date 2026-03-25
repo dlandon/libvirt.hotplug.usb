@@ -17,3 +17,11 @@ Copy the URL exactly as shown:
 https://raw.githubusercontent.com/dlandon/libvirt.hotplug.usb/vYYYY.MM.DD/libvirt.hotplug.usb.plg
 
 Enter the release date "YYYY.MM.DD" of the specific version you want to install.  Be sure to keep the "v" before the release date.
+
+### Support Development
+
+If this plugin has been useful to you and you'd like to support ongoing development, you can optionally make a donation:
+
+[Donate via PayPal](https://www.paypal.com/us/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=EJGPC7B5CS66E)
+
+Support is appreciated, but never expected.
