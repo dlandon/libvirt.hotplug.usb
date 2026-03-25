@@ -2,7 +2,7 @@
 
 A Plugin for Hot-plugging USB Devices to Running VMs. Libvirt Hotplug USB allows mounting of USB Devices (e.g. Keyboard, Mouse, iPhone, FlashDrive, etc) on running VMs. It uses virsh to attach the Devices which avoids Conflicts between different VMs. 
 
-### Installing Libvirt Hotplug USB
+## Installing Libvirt Hotplug USB
 
 To install this plugin manually, enter either of the URLs below in the Enter URL field of the Plugins page.  The URL below will either install the latest or a specific version you choose.
 
@@ -18,7 +18,7 @@ https://raw.githubusercontent.com/dlandon/libvirt.hotplug.usb/vYYYY.MM.DD/libvir
 
 Enter the release date "YYYY.MM.DD" of the specific version you want to install.  Be sure to keep the "v" before the release date.
 
-### Support Development
+## Support Development
 
 If this plugin has been useful to you and you'd like to support ongoing development, you can optionally make a donation:
 
