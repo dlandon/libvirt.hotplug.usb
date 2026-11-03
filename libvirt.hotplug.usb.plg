@@ -2,13 +2,13 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"libvirt.hotplug.usb">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2026.02.14">
+<!ENTITY version	"2026.11.03">
 <!ENTITY launch		"VMs/libvirthotplugusb">
 <!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
 <!ENTITY tgzURL		"https://raw.githubusercontent.com/&author;/&name;/v&version;">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/70001-libvirt-hot-plugin-usb-usb-hot-plugin-for-vms/?tab=comments#comment-640678">
-<!ENTITY MD5		"8624b5e2adc80c2994c4ff310a9daa0b">
+<!ENTITY MD5		"b9f38daa7d7dcf0db56ef264b52d2513">
 ]>
 
 <PLUGIN name="&name;"
@@ -23,6 +23,11 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Validate the plugin bundle before changing installed files.
+- Fix: Report bundle extraction failures and abort installation.
+- Fix: Improve old bundle cleanup to preserve the exact current installation bundle.
+
+###2026.02.14
 - Fix: Change UI notes to a list.
 - Fix: Refactored USB hotplug logic to uniquely identify devices by VID:PID + bus/device.
 - Add: Detach now uses the exact hostdev block from virsh dumpxml, eliminating XML mismatch and enumeration drift issues.
@@ -42,7 +47,7 @@
 ###2025.10.04a
 - Fix: More UI fixes for Unraid 7.2.
 
-###2025.10.04a
+###2025.10.04
 - Fix: Enable Unraid style tooltips.
 - Rem: Remove unnecessary tooltips.
 
@@ -80,7 +85,7 @@
 ###2022.05.24
 - Add: Plugin update check.
 
-###2022.09.17
+###2021.09.17
 - Fix: Code review and cleanup.
 
 ###2021.08.21
@@ -101,8 +106,6 @@
 
 ###2020.06.21
 - Add: Multi Language support.
-
-###2020.06.21
 - Fix: icons for v6.
 
 ###2018.12.08
@@ -154,11 +157,27 @@ The 'pre-install' script.
 -->
 <FILE Run="/bin/bash">
 <INLINE>
+#
+# Validate the bundle before changing the installed plugin.
+#
+if ! tar -tf "/boot/config/plugins/&name;/&name;-&version;.tgz" >/dev/null 2>&amp;1; then
+	echo "ERROR: &name; bundle is missing or invalid. Installation aborted."
+	exit 1
+fi
+
+#
 # Remove emhttp files so we can re-install.
+#
 rm -rf /usr/local/emhttp/plugins/&name;/* 2>/dev/null
 
+#
 # Remove old 'bundle' files.
-rm -f $(ls /boot/config/plugins/&name;/&name;*.tgz 2>/dev/null | grep -v '&version;')
+#
+for bundle in /boot/config/plugins/&name;/&name;*.tgz; do
+	if [[ -f "$bundle" &amp;&amp; "$bundle" != "/boot/config/plugins/&name;/&name;-&version;.tgz" ]]; then
+		rm -f -- "$bundle"
+	fi
+done
 </INLINE>
 </FILE>
 
@@ -167,8 +186,13 @@ Install the plugin bundle.
 -->
 <FILE Run="/bin/bash">
 <INLINE>
+#
 # Install the 'bundle'.
-tar -xf /boot/config/plugins/&name;/&name;-&version;.tgz -C /usr/local/emhttp/plugins 2>/dev/null
+#
+if ! tar -xf "/boot/config/plugins/&name;/&name;-&version;.tgz" -C /usr/local/emhttp/plugins; then
+	echo "ERROR: Unable to extract &name; bundle. Installation aborted."
+	exit 1
+fi
 </INLINE>
 </FILE>
 
@@ -190,7 +214,9 @@ echo ""
 <!-- REMOVE SCRIPT -->
 <FILE Run="/bin/bash" Method="remove">
 <INLINE>
+#
 # Remove all plugin files.
+#
 rm -rf /boot/config/plugins/&name; 2>/dev/null
 rm -rf /usr/local/emhttp/plugins/&name; 2>/dev/null
 
